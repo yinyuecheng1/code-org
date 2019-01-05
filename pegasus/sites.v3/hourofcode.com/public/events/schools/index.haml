@@ -1,0 +1,26 @@
+---
+title: <%= hoc_s(:events_whole_school_title) %>
+layout: wide
+nav: events_nav
+---
+:ruby
+  require pegasus_dir 'helper_modules/forms'
+  hoc_year = DCDO.get("hoc_year", 2017)
+  KIND = "HocSignup#{hoc_year}".freeze
+
+  events = Forms.events_by_country(KIND, entire_school: true)
+  us_events = Forms.events_by_state(KIND, entire_school: true)
+
+%h1= hoc_s(:events_whole_school_title)
+
+%ul
+  %li{class: "hoc-event-country"}
+    %span{style: "font-weight: bold;"}= "United States (#{us_events.count rescue '0'} #{hoc_s(:events)})"
+    %ul{style: "margin-top: 0; margin-bottom: 0;"}
+      -us_events.each do |event|
+        %li{class: "hoc-event-state"}
+          %a{href: "/events/schools/us/#{event[:state_code].downcase}"}= "#{event[:state_code]} (#{event[:count]} #{hoc_s(event[:count] > 1 ? :events : :event)})"
+%ul
+  -events.each do |event|
+    %li{class: "hoc-event-country"}
+      %a{href: "/events/schools/#{event[:country_code].downcase}"}= "#{country_name_from_code(event[:country_code])} (#{event[:count]} #{hoc_s(event[:count] > 1 ? :events : :event)})"

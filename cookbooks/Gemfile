@@ -1,0 +1,17 @@
+source 'https://rubygems.org'
+ruby '~> 2.5'
+
+gem 'berkshelf'
+gem 'chef', '12.7.2'
+gem 'chefspec'
+gem 'kitchen-inspec'
+
+gem 'test-kitchen'
+
+gem 'kitchen-docker'
+gem 'kitchen-dokken'
+
+gem 'kitchen-ec2'
+
+# Provides `sftp` transport to test-kitchen for faster cookbook upload.
+gem 'kitchen-sync'

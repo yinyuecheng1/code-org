@@ -1,0 +1,41 @@
+- content_for(:head) do
+  %script{src: minifiable_asset_path('js/levelbuilder.js')}
+
+%h1 Levels
+= form_tag levels_path, method: :get do
+  = label_tag 'Filter by name:'
+  = text_field_tag :name, params[:name], autofocus: true
+= paginate @levels
+%table
+  %thead
+    %tr
+      %th{ width:100 } Levels
+      %th{ width:100 } Type
+      %th{ width:300 }
+  %tbody
+    - @levels.each do |level|
+      %tr
+        %td= level.name
+        %td= level.class.name
+        %td
+          = link_to t('crud.show'), level
+          - if level.custom?
+            = link_to t('crud.edit'), edit_level_path(level)
+            = link_to t('crud.destroy'), level, method: :delete, data: { confirm: t('crud.confirm') }
+            = link_to 'Clone', '', onclick: "$('#clone_#{level.id}').toggle(); return false;"
+            %div{class: 'clone_level', id: "clone_#{level.id}", style: 'display: none;'}
+              = form_tag level_clone_path(level), method: :post, remote: true do
+                = label_tag 'New name:'
+                = text_field_tag :name, level.name
+                = submit_tag 'Clone'
+= paginate @levels
+%br/
+- if can? :create, Level
+  = link_to t('crud.new_model', model: Level.model_name.human), new_level_path
+#validation-error.validation-error{style: 'background-color: yellow'}
+:javascript
+  window.levelbuilder.ajaxSubmit('.clone_level');
+  $('.clone_level').on('ajax:beforeSend', function (e, xhr) {
+    var validation_error = $('#validation-error').detach();
+    $(e.target).parent().append(validation_error);
+  });

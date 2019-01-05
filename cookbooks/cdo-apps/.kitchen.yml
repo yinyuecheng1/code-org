@@ -1,0 +1,31 @@
+---
+driver:
+  name: dokken
+  chef_version: 12.7.2
+  cap_add:
+  # needed for setting hostname
+  - SYS_ADMIN
+transport:
+  name: dokken
+provisioner:
+  name: dokken
+platforms:
+  - name: ubuntu-14.04
+    driver:
+      image: dokken/ubuntu-14.04
+      pid_one_command: /sbin/init
+    attributes:
+      cdo-repository:
+        branch: <%= `git rev-parse --abbrev-ref HEAD` %>
+    run_list:
+      - recipe[cdo-apps]
+suites:
+  - name: default
+  - name: daemon
+    attributes:
+      cdo-apps:
+        daemon: true
+  - name: stop
+    run_list:
+      - recipe[cdo-apps]
+      - recipe[cdo-apps::stop]

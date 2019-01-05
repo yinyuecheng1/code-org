@@ -1,0 +1,7 @@
+name 'OPD-K5 Design'
+skip_dialog true
+markdown <<MARKDOWN
+# Best Practices > Lesson Planning
+
+<iframe width="640" height="390" src="https://www.youtube.com/embed/WBA-jP4HtR8" frameborder="0" allowfullscreen></iframe>
+MARKDOWN

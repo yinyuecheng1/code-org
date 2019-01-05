@@ -1,0 +1,283 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Lambda layer for functions used in CloudFormation Custom Resources.
+  Note: Admin permissions are required to manage this stack.
+Parameters:
+  SlackEndpoint:
+    Type: String
+    NoEcho: true
+Resources:
+  AMIManager:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: 'Takes an AWS CloudFormation stack name and instance id and returns the AMI ID. Ref: https://blogs.aws.amazon.com/application-management/post/Tx38Z5CAM5WWRXW'
+      FunctionName: AMIManager
+      Code:
+        ZipFile: <%=js 'ami-manager.js' %>
+      Handler: index.handler
+      Runtime: nodejs6.10
+      Timeout: 300
+      Role: !GetAtt AMIManagerRole.Arn
+  AMIManagerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: ['sts:AssumeRole']
+            Effect: Allow
+            Principal: {Service: [lambda.amazonaws.com]}
+      Path: '/'
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action: ["logs:CreateLogGroup","logs:CreateLogStream","logs:PutLogEvents"]
+                Resource: "arn:aws:logs:*:*:*"
+              - Effect: Allow
+                Action:
+                  - "ec2:CreateImage"
+                  - "ec2:DeregisterImage"
+                  - "ec2:DescribeImages"
+                  - "ec2:CreateTags"
+                  - "ec2:DescribeSnapshots"
+                  - "ec2:DeleteSnapshot"
+                  - "ec2:DescribeInstances"
+                Resource: "*"
+              # allow recursive calls
+              - Effect: Allow
+                Action: ['lambda:InvokeFunction']
+                Resource: '*'
+  VpcClassicLink:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: 'Enables a VPC for ClassicLink through the EnableVpcClassicLink API.'
+      FunctionName: VpcClassicLink
+      Code:
+        ZipFile: <%=js 'vpcClassicLink.js' %>
+      Handler: index.handler
+      Runtime: nodejs6.10
+      Timeout: 300
+      Role: !GetAtt VpcClassicLinkRole.Arn
+  VpcClassicLinkRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: ['sts:AssumeRole']
+            Effect: Allow
+            Principal: {Service: [lambda.amazonaws.com]}
+      Path: '/'
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action: ["logs:CreateLogGroup","logs:CreateLogStream","logs:PutLogEvents"]
+                Resource: "arn:aws:logs:*:*:*"
+              - Effect: Allow
+                Action:
+                  - "ec2:DisableVpcClassicLink"
+                  - "ec2:EnableVpcClassicLink"
+                  - "ec2:EnableVpcClassicLinkDnsSupport"
+                  - "ec2:DisableVpcClassicLinkDnsSupport"
+                Resource: "*"
+  CountASG:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: 'Returns the current number of InService instances in an Auto Scaling Group.'
+      FunctionName: CountASG
+      Code:
+        ZipFile: <%=js 'count_asg.js' %>
+      Handler: index.handler
+      Runtime: nodejs6.10
+      Timeout: 30
+      Role: !GetAtt CountASGRole.Arn
+  CountASGRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: ['sts:AssumeRole']
+            Effect: Allow
+            Principal: {Service: [lambda.amazonaws.com]}
+      Path: '/'
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action: ["logs:CreateLogGroup","logs:CreateLogStream","logs:PutLogEvents"]
+                Resource: "arn:aws:logs:*:*:*"
+              - Effect: Allow
+                Action: ["autoscaling:DescribeAutoScalingGroups"]
+                Resource: "*"
+  SlackEvent:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: 'Publish a CloudWatch Event to a Slack channel.'
+      FunctionName: SlackEvent
+      Code: <%=js_zip ['slackCloudWatchEvent.js']%>
+      Environment:
+        Variables:
+          SLACK_ENDPOINT: !Ref SlackEndpoint
+      Handler: slackCloudWatchEvent.handler
+      Runtime: nodejs6.10
+      Timeout: 30
+      Role: !GetAtt BasicLambdaRole.Arn
+  BasicLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: ['sts:AssumeRole']
+            Effect: Allow
+            Principal: {Service: [lambda.amazonaws.com]}
+      Path: /
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  S3Object:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: S3 Object Custom Resource
+      FunctionName: S3Object
+      Role: !GetAtt S3ObjectRole.Arn
+      Code:
+        ZipFile: <%=js 's3Object.js' %>
+      Handler: index.handler
+      Timeout: 30
+      Runtime: nodejs6.10
+  S3ObjectRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal: {Service: [lambda.amazonaws.com]}
+          Action: ['sts:AssumeRole']
+      Path: /
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      Policies:
+      - PolicyName: S3Policy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 's3:PutObject'
+                - 's3:PutObjectAcl'
+                - 'S3:DeleteObject'
+              Resource: !Sub "arn:aws:s3:::*"
+  GlueConfiguration:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: Adjusts Glue Configuration property.
+      FunctionName: GlueConfiguration
+      Handler: index.handler
+      Role: !GetAtt GlueConfigurationRole.Arn
+      Code:
+        ZipFile: <%=js 'glueConfiguration.js'%>
+      Timeout: 30
+      Runtime: nodejs6.10
+  GlueConfigurationRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal: {Service: [lambda.amazonaws.com]}
+          Action: ['sts:AssumeRole']
+      Path: /
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      Policies:
+      - PolicyName: GluePolicy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'glue:UpdateCrawler'
+              Resource: '*'
+  S3PartitionCloudFrontLog:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: 'Partition CloudFront Access Log stored on S3.'
+      FunctionName: S3PartitionCloudFrontLog
+      Code:
+        ZipFile: <%=js 's3PartitionCloudFrontLog.js'%>
+      Handler: index.handler
+      Runtime: nodejs6.10
+      Timeout: 30
+      Role: !GetAtt S3LogsRole.Arn
+  S3LogsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal: {Service: [lambda.amazonaws.com]}
+          Action: ['sts:AssumeRole']
+      Path: /
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      Policies:
+      - PolicyName: cdo-logs-policy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - 's3:GetObject'
+            - 's3:PutObject'
+            - 's3:PutObjectAcl'
+            - 's3:DeleteObject'
+            Resource: "arn:aws:s3:::cdo-logs/*"
+  S3BucketConfiguration:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: Sets a NotificationConfiguration for an external S3 bucket.
+      FunctionName: S3BucketConfiguration
+      Handler: index.handler
+      Role: !GetAtt S3LogsRole.Arn
+      Code:
+        ZipFile: |
+          var response = require('cfn-response');
+          var AWS = require('aws-sdk');
+          var s3 = new AWS.S3();
+          exports.handler = function(event, context) {
+            var respond = (e) => response.send(event, context, e ? response.FAILED : response.SUCCESS, e ? e : {});
+            process.on('uncaughtException', e=>respond(e));
+            var params = event.ResourceProperties;
+            delete params.ServiceToken;
+            if (event.RequestType === 'Delete') {
+              params.NotificationConfiguration = {};
+            }
+            s3.putBucketNotificationConfiguration(params).promise()
+              .then((data)=>respond())
+              .catch((e)=>respond());
+          };
+      Timeout: 30
+      Runtime: nodejs6.10
+Outputs:
+  AMIManager:
+    Value: !GetAtt AMIManager.Arn
+    Description: ServiceToken for AMIManager Lambda function
+    Export: {Name: AMIManager}
+  VpcClassicLink:
+    Value: !GetAtt VpcClassicLink.Arn
+    Description: ServiceToken for VpcClassicLink Lambda function
+  SlackEvent:
+    Value: !GetAtt SlackEvent.Arn
+    Export: {Name: SlackEvent}
+  S3Object:
+    Value: !GetAtt S3Object.Arn
+    Export: {Name: S3Object}
+  S3LogsRole:
+    Value: !GetAtt S3LogsRole.Arn
+    Export: {Name: S3LogsRole}

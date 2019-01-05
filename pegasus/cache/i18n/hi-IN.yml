@@ -1,0 +1,291 @@
+---
+hi-IN:
+  hello: हैलो वर्ल्ड
+  'yes': हाँ
+  'no': नहीं
+  select_language: कृपया अपनी भाषा चुनें
+  upgrade_ie_link: अधिक जानें
+  en: कंप्यूटर विज्ञान
+  computer_science_edweek: कंप्यूटर विज्ञान शिक्षा सप्ताह
+  csedweek_dates: दिसंबर 8-14, 2014
+  csedweek_banner_hoc: '<a href="http://hourofcode.com" style="color: white; text-decoration:underline;
+    font-weight:bold"> ऑवर ऑफ़ कोड</a> आ रहा है। सभी शिक्षकों और आयोजकों को बोला रहा
+    है, <a href="http://hourofcode.com" style="color: white; text-decoration:underline;
+    font-weight:bold"> आपके ऑवर ऑफ़ कोड  का प्लान करे</a>'
+  csedweek_banner_teachers: '<a href="/csteacher" style="color: white; text-decoration:
+    none; font-weight: 400"> तुम एक CS शिक्षक हो? अन्य CSEdWeek संसाधन देखें</a>'
+  n_have_learned_an_hoc: |-
+    का प्रयास एक कोड के घंटे सेवा की
+     code ke ek ghante dha koshish karo
+  anybody_can_learn: हर कोई सीख सकता है
+  learn_now: अब जानें
+  petition_message: हर स्कूल में हर छात्र को कंप्यूटर विज्ञान सीखने का अवसर होना चाहिए
+  petition_sign_message: 'अगर आप सहमत हैं, आपका नाम साइन इन करें।  # दूसरों में शामिल
+    हों।'
+  petition_sign_message_support: |-
+    यदि आप हमें समर्थन, अपना नाम साइन इन करें।  # दूसरों में शामिल हों।
+    Agar aap hamare samarthan kartha hein, up ne nam ko sankhet karo. Log nal shamil ho
+  petition_join_others: |-
+    # दूसरों में शामिल हों
+    Log nal shaamil ho
+  name: नाम
+  email: ईमेल
+  zipcode: ज़िप कोड या देश
+  submit: सबमिट करें
+  twentyhours_heading: हमारे कंप्यूटर विज्ञान पाठ्यक्रम का इंट्रो प्रयास करें
+  twentyhours_text: आपका पहला ऑवर ऑफ़ कोड समाप्त हो गया?अनुवर्ती कोर्स में कंप्यूटर
+    विज्ञान और प्रोग्रामिंग अवधारणाओं को और अधिक विस्तार से जाने।
+  og_title: |-
+    हर बच्चे का अवसर मिलना चाहिए
+    har baache avaskar dhe hakadhaar ne
+  og_description: हर स्कूल में हर छात्र को कंप्यूटर विज्ञान का अध्ययन करने का अवसर
+    मिलना चाहिए। यह सब कुछ बदल रहा है।
+  csedweek_og_title: कंप्यूटर विज्ञान शिक्षा सप्ताह
+  hoc2014_heading: <a href="http://hourofcode.com"> ऑवर ऑफ़ कोड</a> में शामिल <br/>
+    8-14 दिसंबर, 2014 <br/>
+  hoc2014_try: कर के देखे
+  hoc2014_teachers: शिक्षक
+  hoc2014_host: मेजबानी करे
+  hoc2014_everyone: हर कोई
+  hoc2014_support: |-
+    यह का समर्थन
+    Is ka samarthan karo
+  hoc2014_whatishoc: ऑवर ऑफ़ कोड क्या है?
+  csedweek_map_header: |-
+    घंटा कोड की घटनाओं दुनिया भर
+    dhuniya bhar mein code kee ghatanaon ke ghante
+  csedweek_map_signup: |-
+    साइन अप आपके ईवेंट
+    Upne ghatana ko sankhet karo
+  csedweek_map_search_placeholder: |-
+    कोड के घंटे की घटनाओं के लिए खोज
+    Code dha ghanta dha ghatana ko dundo
+  csedweek_map_search_search: 'खोजें:'
+  csedweek_map_legend_event: कोड घंटे की कड़ियाँ
+  csedweek_map_legend_cs_tech_jam: विशेष घटना
+  cded_sign_up: साइन अप
+  cded_try_it: कर के देखे
+  try_now: अधिक जानें
+  california_heading: कंप्यूटर विज्ञान पढ़ाने के लिए अपने स्कूल से पूछो
+  california_text: किसी भी शिक्षक हमारे <a href='http://studio.code.org/'> मुफ्त पाठ्यक्रमों</a>
+    को इस्तेमाल कर सकते हैं।  कोई भी प्राथमिक स्कूल <a href='http://code.org/educate/k5'>
+    कंप्यूटर विज्ञान पढ़ा सकता है</a>। हाई स्कूलों से पूछना <a href='http://code.org/educate/districts'>
+    हमारे सहायक बने।
+  california_button: अधिक जानें
+  flappy_heading: Code.org के लिए flappy जन्मदिन
+  flappy_text: Code.org की स्थापना को एक साल हुए|<br/><br/> हमारे साथ जश्न मे शामिल
+    हो और खुद अपना <b>फ्लेप्पी</b> खेल बनाये| आप अपने नियम कोड कर सकते है और दोस्तों
+    को बी दिखा सकते है!
+  view_english_site: देखें हिंदी साइट
+  non_english_tutorials: 'ट्यूटोरियल एकाधिक भाषाओं में अनुवाद:'
+  write_your_first_program: अपना पहला कंप्यूटर प्रोग्राम लिखे
+  learn_cs_concepts: 'कंप्यूटर विज्ञान की मूलभूत अवधारणाओं की सीखे - ड्रैग और ड्राप
+    तकनीक से । यह एक खेल की तरह का पाठ है जिसकी शुरुआत में बिल गेट्स, मार्क जुकरबर्ग
+    के साथ एंग्री बर्ड और प्लान्ट्स के साथ जॉम्बीज है । सीखें रिपीट होने वाले लूप,
+    यदि- तो ( if -then) आदेश एवं शुरुआती गणित । '
+  all_ages: सभी आयु
+  beginner: शुरआती
+  n_participants: "# प्रतिभागियों"
+  go: जाएं
+  thank_you_: धन्यवाद!
+  congratulations: बधाइयाँ!
+  congratulations_on_completing_hoc: एक ऑवर ऑफ़ कोड को पूरा करने पर बधाई।
+  congratulations_volunteer: 'बधाई: अब जबकि आपने आवर ऑफ़ कोड को इस्तेमाल किया है, <a
+    href="https://code.org/volunteer"> एक कक्षा में स्वयंसेवक बनने के लिए साइन अप
+    करें</a> और छात्रों की मदद करें आवर ऑफ़ कोड सिखने में ।'
+  congrats_next_tutorials_title: अगले स्तर करने के लिए बढ़े
+  get_a_certificate_of_achievement: उपलब्धि का एक प्रमाण पत्र प्राप्त करे
+  third_party_lightbot_btn_site: Lightbot पर जाएँ
+  third_party_codecademy_btn_site: Codecademy पर जाएँ
+  third_party_organization: संगठन
+  third_party_cost_299: "$2.99/डाउनलोड"
+  enter_valid_email: कृपया एक मान्य ईमेल एड्रेस डाले
+  thanks_for_submitting: सबमिट करने के लिए धन्यवाद!
+  personalize_certificate: आपके प्रमाण पत्र को व्यक्तिगत करें
+  share_achievement: आपकी उपलब्धि साझा करें
+  leaderboards_for_hoc: Leaderboards ऑवर ऑफ़ कोड के लिए।
+  support_url: http://support.code.org/
+  country: देश
+  city: शहर
+  gender: लिंग
+  boys: लड़के
+  girls: लड़कियों
+  give_my_hour: 'करने के लिए मुझे घंटा दे:'
+  girls_team: लड़कियों टीम
+  boys_team: लड़कों की टीम
+  tell_the_world: दुनिया को बताना!
+  thanks_for_voting: मतदान के लिए धन्यवाद!
+  share_on_facebook: Facebook पर भेजे
+  share_on_twitter: Twitter पर भेजे
+  beyond_an_hour: कोड की एक घंटे से परे
+  get_started: शुरू करें
+  i_agree: मैं सहमत हूँ
+  participant_select: "-चयन करें-"
+  participant_student: छात्र
+  participant_parent: अभिभावक
+  participant_educator: शिक्षक
+  participant_engineer: सॉफ्टवेयर इंजीनियर
+  participant_other: इनमें से कोई नहीं
+  print_all: सभी को प्रिंट कर दो
+  print_ice_art: 'अपनी बर्फ कला मुद्रित करें '
+  create_art_with_zombie: 'या फिर ज़ोंबी से उन्नत कला बनाए '
+  i_am_a: मैं एक हूँ
+  never_spam: हम आपको कभीं स्पैम नही करेंगे
+  enter_country: यदि संयुक्त राज्य के बाहर देश हैं तो अपना देश डालें
+  used_infrequent_updates: केवल निराले अपडेट के लिए प्रयुक्त
+  privacy_practices_children: बच्चो के लिए हमारे गोपनीयता प्रथाओं को पढ़ें
+  petition_thankyou: 'याचिका पर हस्ताक्षर करने के लिए धन्यवाद '
+  continue_learning_header: एक घंटे के बाद भी पढ़ते रहे
+  what_gender: आपका लिंग क्या है?
+  girl: लड़की
+  boy: लड़का
+  studiobar_donate_title: दान करे
+  studiobar_shop_title: दुकान
+  homepage_slot_text_shop: दुकान
+  homepage_action_text_sign_up: साइन अप
+  homepage_action_text_try_it: कर के देखे
+  homepage_banner_text_link: अधिक जानें
+  homepage_banner_privacy_link: अधिक जानें
+  homepage_banner_20k_teachers_link: अधिक जानें
+  homepage_banner_40k_teachers_link: अधिक जानें
+  homepage_slot_text_link_hoc: 'एक घंटे कोडिंग की कोशिश करें '
+  homepage_slot_text_link_elementary: प्राथमिक स्कूल
+  homepage_slot_text_link_middle: माध्यमिक विद्यालय
+  homepage_slot_text_link_high: उच्च विद्यालय
+  homepage_slot_text_link_donate: दान करे
+  homepage_donors_donate: दान करे
+  homepage_below_hero_announcement_link_text: अधिक जानें
+  contact_form_topic_student: मै एक विद्यार्थी हूँ
+  contact_form_topic_teacher: मैं एक अध्यापक/शिक्षक हूँ
+  contact_form_topic_outside_us: मैं अमेरिका के बाहर हूँ
+  class_submission_out_of_school_summer_camp: ग्रीष्मकालीन शिविर
+  class_submission_online: ऑनलाइन
+  class_submission_level_elementary: प्राथमिक
+  class_submission_level_middle_school: माध्यमिक विद्यालय
+  class_submission_level_high_school: उच्च विद्यालय
+  class_submission_level_college: कॉलेज
+  starwars_javascript_title: जावास्क्रिप्ट
+  mc_longdescription: इस Minecraft की दुनिया के जरिए साहसिक यात्रा पर स्टीव या एलेक्स
+    को ले जाने के लिए कोड ब्लॉक का उपयोग करें
+  mc_shortdescription: इस Minecraft की दुनिया के जरिए साहसिक यात्रा पर स्टीव या एलेक्स
+    को ले जाने के लिए कोड ब्लॉक का उपयोग करें
+  mc_gradelevel: उम्र 6-106
+  minecraft_agent_button: शुरू करें
+  minecraft_designer_button: शुरू करें
+  minecraft_adventurer_button: शुरू करें
+  are_you_teacher: क्या आप एक शिक्षक हैं?
+  volunteer_engineer_submission_field_name: नाम
+  volunteer_engineer_submission_field_name_placeholder: पूरा नाम
+  volunteer_engineer_submission_field_company: कंपनी (या विश्वविद्यालय)
+  volunteer_engineer_submission_field_company_placeholder: कंपनी (या विश्वविद्यालय)
+  volunteer_engineer_submission_field_location: स्थान
+  volunteer_engineer_submission_field_description: विवरण 
+  volunteer_engineer_submission_field_email: ईमेल पता
+  volunteer_engineer_submission_field_email_placeholder: ईमेल पता
+  volunteer_engineer_submission_field_email_preference_yes: हाँ
+  volunteer_engineer_submission_field_email_preference_no: नहीं
+  volunteer_engineer_submission_submit: सबमिट करें
+  volunteer_engineer_submission_commitment_uncertain: अनिश्चित
+  volunteer_engineer_submission_commitment_one_hr_per_week: प्रति सप्ताह 1 घंटे
+  volunteer_engineer_submission_commitment_three_hrs_per_week: प्रति सप्ताह 3 घंटे
+  volunteer_engineer_submission_commitment_five_hrs_per_week: प्रति सप्ताह 5 घंटे
+  volunteer_engineer_submission_commitment_annually: 2 - 3 बार प्रति वर्ष
+  volunteer_engineer_submission_commitment_monthly: एक दो घंटे प्रति माह
+  volunteer_engineer_submission_commitment_weekly: एक दो घंटे प्रति सप्ताह
+  volunteer_engineer_submission_experience_software_professional: सॉफ्टवेयर इंजीनियर
+  petition_age: आयु
+  dashboard_announce_learn_more_button: अधिक जानें
+  dashboard_landing_loading: लोड हो रहा है...
+  dashboard_action_cancel: रद्द करें
+  dashboard_action_delete: मिटाएँ
+  dashboard_action_delete_yes: हाँ
+  dashboard_action_delete_no: नहीं
+  dashboard_action_confirm: मिटाएँ?
+  dashboard_sections_close: बंद करें
+  dashboard_students_name: नाम
+  dashboard_students_male: पुरूष
+  dashboard_students_female: महिला
+  dashboard_students_secret_picture_title: गुप्त चित्र
+  dashboard_students_secret_word_title: गुप्त शब्द
+  dashboard_students_url: URL
+  dashboard_login_none: ईमेल
+  dashboard_stage: मंच
+  dashboard_puzzle: पहेली
+  dashboard_correctness_correct: सही
+  dashboard_student: छात्र
+  learn_more: अधिक जानें
+  learn_sign_up_button: साइन अप
+  blockly_name: ब्लॉक्ली
+  math_category_name: गणित
+  codeorg_gradelevel: उम्र 4-104
+  codeintl_gradelevel: उम्र 4-104
+  tynker_gradelevel: उम्र 5-13
+  scratch_gradelevel: उम्र 8 +
+  lightbot_gradelevel: सभी आयु
+  thinkersmith_gradelevel: सभी आयु
+  condcards_gradelevel: उम्र 8-12
+  lightbotintl_gradelevel: सभी आयु
+  codehs_gradelevel: उच्च विद्यालय
+  codecademy_gradelevel: उच्च विद्यालय
+  processing_gradelevel: उच्च विद्यालय
+  robomind_gradelevel: उम्र 8-13
+  codespark_gradelevel: प्राथमिक
+  kodable_gradelevel: प्राथमिक
+  tynkerapp_gradelevel: उम्र 5-13
+  robomindnl_gradelevel: उम्र 8-13
+  flappy_gradelevel: उम्र 6-106
+  bitsbox_gradelevel: प्राथमिक
+  makeschool_gradelevel: उच्च विद्यालय
+  touchdevelop_gradelevel: उच्च विद्यालय
+  blockly_gradelevel: सभी आयु
+  thinkersmith2_gradelevel: उम्र 8 +
+  kodableunplugged_gradelevel: उम्र 8-13
+  projguts_gradelevel: उम्र 10-13
+  hourofcode_gradelevel: उम्र 6-106
+  frozen_gradelevel: उम्र 8-108
+  starwars_gradelevel: उम्र 6-106
+  artist_gradelevel: उम्र 8-108
+  monstercoding_gradelevel: उम्र 5-13
+  allcancode_gradelevel: उम्र 5-10
+  boxisland_gradelevel: प्राथमिक
+  coursee_gradelevel: उम्र 8-12
+  coursee-2017_gradelevel: उम्र 8-12
+  coursee-2018_gradelevel: उम्र 8-12
+  boxisland_platformtext: एंड्रॉयड, आईओएस
+  codeorg_beyond_gradelevel: उम्र 4-104
+  tynker_beyond_gradelevel: उम्र 5-13
+  scratch_beyond_gradelevel: उम्र 8 +
+  lightbot_beyond_gradelevel: सभी आयु
+  codecademy_beyond_gradelevel: उच्च विद्यालय
+  kodable_beyond_gradelevel: प्राथमिक
+  scratchjr_beyond_gradelevel: प्राथमिक
+  hacketyhack_beyond_gradelevel: उच्च विद्यालय
+  robomind_beyond_gradelevel: उम्र 8-13
+  makeschool_beyond_gradelevel: उच्च विद्यालय
+  touchdevelop_beyond_gradelevel: उच्च विद्यालय
+  codehs_beyond_gradelevel: उच्च विद्यालय
+  edx_beyond_gradelevel: विश्वविद्यालय
+  coursera_beyond_gradelevel: विश्वविद्यालय
+  udacity_beyond_gradelevel: विश्वविद्यालय
+  teachingtree_beyond_gradelevel: विश्वविद्यालय
+  kodu_beyond_gradelevel: उम्र 8 +
+  cargobot_beyond_gradelevel: उम्र 8 +
+  kidsruby_beyond_gradelevel: उम्र 12 +
+  w3schools_beyond_gradelevel: उम्र 12 +
+  mozilla_beyond_gradelevel: उम्र 12 +
+  finch_beyond_gradelevel: उम्र 8 +
+  processing_beyond_gradelevel: उच्च विद्यालय
+  sphero_beyond_gradelevel: उम्र 8 +
+  flappy_shortcode: फ़ड़फ़ड़ाय
+  header_courses: पाठ्यक्रम
+  applab_tile_start_tutorial: शुरू करें
+  account_sign_up_child_accept_terms: अगर मैं उंर के 13 साल से कम कर रहा हूं, मैं
+    पुष्टि करता हूं कि मैं अपने माता पिता या कानूनी है गार्जियन Code.org सेवाओं का
+    उपयोग करने की अनुमति है ।
+  hoc_overview_start_tutorial: शुरू करें
+  hoc2018_creativity_create: बनाए
+  hoc2018_mc_start: शुरू करें
+  hoc2018_mc_homepage_try_it: कर के देखे
+  hoc2018_dance_party_button: शुरू करें
+  hoc2018_dance_teacher_resources_tile2_button: अनप्लग की गई गतिविधि
+  hoc2018_dance_amazon_about_future_engineer_button: अधिक जानें

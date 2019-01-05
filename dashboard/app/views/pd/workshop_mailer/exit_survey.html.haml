@@ -1,0 +1,55 @@
+:css
+  body {
+    font-family: Gotham, sans-serif;
+  }
+
+- code_org_link = link_to 'Code.org', 'http://code.org'
+
+%p
+  Hi
+  = @enrollment.first_name + ','
+
+%p
+  Thank you for attending a Code.org
+  = @workshop.course
+  = @workshop.subject
+  workshop on
+  = @workshop.sessions.first.formatted_date + '.'
+
+%p
+  %strong
+    Please tell us about your experience at this workshop by filling out this 15 minute
+    = link_to('survey', @survey_url) + '.'
+
+%p
+  %i Why? Because your opinion matters!!
+  We are committed to continually improving our programs.
+  We want our teachers to have the best workshops possible.
+  Your feedback helps us build the experience that teachers have in the future!
+
+%p
+  Please note that the facilitator of your session will see your responses.
+  Your name and email will not be shared with your facilitator to protect your anonymity,
+  however, it’s possible your facilitator could identify you from your written responses.
+
+- if @workshop.course == Pd::Workshop::COURSE_CSF
+  %h3
+    Unplugged supplies for CS Fundamentals, at no cost:
+  %p
+    Included in the survey is an order form for free supplies for the unplugged activities.
+    Consider it a thank you gift for bringing computer science into your classroom :-)
+
+  %p
+    There’s also a personalized certificate attached to this email acknowledging your successful completion of
+    = code_org_link + "'s"
+    CS Fundamentals workshop.
+
+= render partial: 'iste'
+
+%p
+  Thank you,
+  %br
+  Baker Franke
+  %br
+  Evaluation Manager
+  = code_org_link

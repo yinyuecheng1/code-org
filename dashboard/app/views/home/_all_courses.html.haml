@@ -1,0 +1,46 @@
+:ruby
+  show_state = Gatekeeper.allows('logged_in_studio_homepage', default: true)
+
+  tall_blocks = [
+    Script::COURSE1_NAME,
+    Script::COURSE2_NAME,
+    Script::COURSE3_NAME,
+    Script::COURSE4_NAME,
+    Script::COURSEA_NAME,
+    Script::COURSEB_NAME,
+    Script::COURSEC_NAME,
+    Script::COURSED_NAME,
+    Script::COURSEE_NAME,
+    Script::COURSEF_NAME,
+    Script::MINECRAFT_AQUATIC_NAME,
+    Script::MINECRAFT_HERO_NAME,
+    Script::STARWARS_NAME,
+    Script::FROZEN_NAME,
+    Script::HOC_NAME,
+    Script::FLAPPY_NAME,
+    Script::INFINITY_NAME,
+    Script::PLAYLAB_NAME,
+    Script::ARTIST_NAME,
+    Script::APPLAB_INTRO,
+    Script::DANCE_PARTY_NAME
+  ]
+
+  wide_blocks = [
+    Script::TWENTY_HOUR_NAME,
+    "unplugged",
+    Script::EXPRESS_NAME,
+    Script::PRE_READER_EXPRESS_NAME,
+  ]
+
+.all-course-blocks
+  - tall_blocks.each do |script_name|
+    %div{id: script_name}
+      = render partial: 'shared/course_tall_block', locals: { id: script_name }
+
+  - wide_blocks.each do |script_name|
+    %div{id: script_name}
+      = render partial: 'shared/course_wide_block', locals: { id: script_name, view: "small" }
+
+.csf-courses-header
+  .row
+    .span12.twolineheader!= t('home.heading_elementary')

@@ -1,0 +1,33 @@
+has_lesson_plan true
+
+stage 'Overview and Setup Instructions'
+level 'Internet Simulator Setup'
+level 'Internet Simulator Setup 2'
+level 'Internet Simulator Setup 3'
+
+stage 'Peer to Peer - Sending Bits on a Shared Wire'
+level 'NetSim Standalone SendAB'
+
+stage 'Peer to Peer - Sending Numbers'
+level 'NetSim Standalone Sending Numbers'
+
+stage 'Peer to Peer - Sending Ascii'
+level 'NetSim Standalone Sending Numbers Ascii'
+
+stage 'Broadcasting messages'
+level 'NetSim Standalone Broadcast'
+
+stage 'Routers and addresses'
+level 'NetSim Standalone Classroom Routers'
+
+stage 'Packets and Reliability'
+level 'NetSim Standalone Packets TCP'
+
+stage 'Manual DNS'
+level 'NetSim Standalone Manual DNS'
+
+stage 'Automatic DNS node'
+level 'NetSim Standalone Automatic DNS'
+
+stage 'Internet Simulator Freeplay'
+level 'NetSim Standalone Freeplay'

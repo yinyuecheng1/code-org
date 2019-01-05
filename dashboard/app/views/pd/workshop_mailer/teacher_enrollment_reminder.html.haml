@@ -1,0 +1,52 @@
+:css
+  body {
+    font-family: Gotham, sans-serif;
+  }
+
+%p
+  Hi
+  = @enrollment.first_name + ','
+
+- if @workshop.local_summer?
+  %p
+    This is a reminder about your upcoming 5-day summer workshop on the Code.org
+    = @workshop.course
+    curriculum.
+- else
+  %p
+    This is a reminder about your upcoming Code.org
+    = @workshop.course_name
+    = @workshop.subject
+    workshop.
+
+- if @workshop.pre_survey?
+  - survey_type = @workshop.summer? ? 'pre-course' : 'pre-workshop'
+  %p
+  - if @is_first_pre_survey_email
+    We’re excited to continue to work together to bring computer science to your
+    classroom. Please take a moment to complete the
+    = survey_type
+    survey and review the following logistical details about your workshop.
+    If you have any questions, reach out to your workshop organizer directly:
+    = "#{@organizer.name} at "
+    = mail_to @organizer.email, "#{@organizer.email}."
+    = render partial: "#{survey_type.underscore}_survey"
+  -elsif !Pd::PreWorkshopSurvey.where(pd_enrollment: @enrollment).exists?
+    If you have not already done so, please complete the
+    = link_to "#{survey_type} survey", @pre_survey_url, target: "_blank"
+    and review the
+    following logistical details about your workshop. If you have any questions about
+    your workshop, reach out to your workshop organizer directly:
+    = "#{@organizer.name} at "
+    = mail_to @organizer.email, "#{@organizer.email}."
+- else
+  %p
+    We’re excited to continue to work together to bring computer science to your classroom.
+    If you have any questions, reach out to your workshop organizer directly:
+    = "#{@organizer.name} at "
+    = mail_to @organizer.email, "#{@organizer.email}."
+
+-if [Pd::Workshop::COURSE_COUNSELOR, Pd::Workshop::COURSE_ADMIN].include? @workshop.course
+  = render partial: 'teacher_enrollment_details_counselor'
+-else
+  = render partial: 'teacher_enrollment_details'

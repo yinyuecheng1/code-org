@@ -1,0 +1,48 @@
+- level ||= @level
+- last_attempt = @last_attempt unless local_assigns.has_key? :last_attempt
+- in_level_group ||= false
+- left_align = local_assigns[:left_align]
+- is_contained_level ||= false
+
+- if in_level_group # The LevelGroup will collect results for each level.
+  :javascript
+    window.dashboard.codeStudioLevels.registerLevel(#{level.id}, new FreeResponse(#{level.id}, #{!!level.optional}));
+
+- else # Otherwise we need to provide a `getResult` function.
+  :javascript
+    window.dashboard.codeStudioLevels.registerGetResult(
+      function getResult() {
+        var forceSubmittable = window.location.search.indexOf("force_submittable") !== -1;
+
+        return {
+          response: encodeURIComponent($('.response').val()),
+          submitted: appOptions.level.submittable || forceSubmittable,
+          result: true,
+          testResult: #{level.submittable? ? ActivityConstants::UNREVIEWED_SUBMISSION_RESULT : ActivityConstants::FREE_PLAY_RESULT}
+        };
+      }
+    );
+
+.free-response{:class => ('left-aligned' if left_align)}
+  - if level.title.present? && (!in_level_group || is_contained_level)
+    %h1= level.title
+  - if level.long_instructions
+    %div= render(inline: level.long_instructions, type: :md)
+
+  - if level.allow_user_uploads?
+    %script{src: minifiable_asset_path('js/fileupload/jquery.iframe-transport.js')}
+    %script{src: minifiable_asset_path('js/fileupload/jquery.fileupload.js')}
+    %p#free-response-upload
+    :javascript
+      dashboard.project.getCurrentId = function () {
+        return appOptions.channel;
+      };
+
+      ReactDOM.render(React.createElement(dashboard.Attachments, {showUnderageWarning: !appOptions.is13Plus, readonly: #{!!@view_options.readonly_workspace}}), document.querySelector('#free-response-upload'));
+
+  - height = level.height || '80'
+  %textarea.response{id: "level_#{level.id}", placeholder: level.placeholder || 'Enter your answer here', style: "height: #{height}px;", readonly: @view_options.readonly_workspace}= last_attempt
+
+  -# Don't render the dialog partial if we're inside a LevelGroup.
+  = render partial: 'levels/dialog', locals: {app: 'free_response'} unless in_level_group
+  = render partial: 'levels/teacher_markdown', locals: {data: {'teacher_markdown' => level.solution}}

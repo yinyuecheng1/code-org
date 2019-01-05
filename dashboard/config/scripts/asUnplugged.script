@@ -1,0 +1,26 @@
+stage 'Happy Maps'
+level 'UnplugHappyMaps'
+
+stage 'Move it, Move it'
+level 'MoveIt'
+
+stage 'Real-life Algorithms: Plant a Seed'
+level 'PlantASeed'
+
+stage 'Graph Paper Programming'
+level 'GraphPaperProgramming'
+
+stage 'Building a Foundation'
+level 'BuildingAFoundation'
+
+stage 'Getting Loopy'
+level 'GettingLoopy'
+
+stage 'The Big Event'
+level 'BigEvent'
+
+stage 'Binary Bracelets'
+level 'BinaryBracelets'
+
+stage 'Songwriting'
+level 'SongwritingParameters'

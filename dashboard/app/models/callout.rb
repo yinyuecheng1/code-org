@@ -1,0 +1,81 @@
+# == Schema Information
+#
+# Table name: callouts
+#
+#  id               :integer          not null, primary key
+#  element_id       :string(1024)     not null
+#  localization_key :string(1024)     not null
+#  created_at       :datetime
+#  updated_at       :datetime
+#  script_level_id  :integer
+#  qtip_config      :text(65535)
+#  on               :string(255)
+#  callout_text     :string(255)
+#
+
+class Callout < ActiveRecord::Base
+  include Seeded
+  belongs_to :script_level, inverse_of: :callouts
+
+  CSV_HEADERS = {
+    element_id: 'element_id',
+    localization_key: 'localization_key',
+    script_id: 'script_id',
+    level_num: 'level_num',
+    game_name: 'game_name',
+    qtip_config: 'qtip_config'
+  }.freeze
+
+  # Use the zero byte as the quote character to allow importing double quotes
+  #   via http://stackoverflow.com/questions/8073920/importing-csv-quoting-error-is-driving-me-nuts
+  CSV_IMPORT_OPTIONS = {col_sep: "\t", headers: true, quote_char: "\x00"}.freeze
+
+  def self.find_or_create_all_from_tsv!(filename)
+    created = []
+    CSV.read(filename, CSV_IMPORT_OPTIONS).each do |row|
+      created << first_or_create_from_tsv_row!(row)
+    end
+    created
+  end
+
+  def self.first_or_create_from_tsv_row!(row_data)
+    id_or_name = row_data[CSV_HEADERS[:script_id]]
+
+    unless id_or_name.to_i != 0
+      script_record = Script.where({'name' => id_or_name})
+      id_or_name = script_record.first && script_record.first.id
+    end
+
+    unless id_or_name
+      puts "Error finding id_or_name: #{id_or_name}"
+      return nil
+    end
+
+    script_level_search_conditions = {
+      'scripts.id' => id_or_name,
+      'levels.level_num' => row_data[CSV_HEADERS[:level_num]],
+      'games.name' => row_data[CSV_HEADERS[:game_name]]
+    }
+    script_level = ScriptLevel.joins(levels: :game).joins(:script).where(script_level_search_conditions)
+
+    unless script_level && script_level.count > 0
+      puts "Error finding script level with search conditions: #{script_level_search_conditions}"
+      return nil
+    end
+
+    begin
+      JSON.parse(row_data[CSV_HEADERS[:qtip_config]] || '{}')
+    rescue JSON::ParserError
+      puts "Error parsing qtip_config JSON: #{script_level_search_conditions}"
+      return nil
+    end
+
+    params = {
+      element_id: row_data[CSV_HEADERS[:element_id]],
+      localization_key: row_data[CSV_HEADERS[:localization_key]],
+      qtip_config: row_data[CSV_HEADERS[:qtip_config]],
+      script_level: script_level.first
+    }
+    Callout.where(params).first_or_create!
+  end
+end

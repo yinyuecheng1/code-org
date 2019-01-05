@@ -1,0 +1,20 @@
+:ruby
+  events_text = hoc_s(:map_header_count_year)
+  events_text.gsub!('%{event_count}', format_integer_with_commas(fetch_hoc_metrics['total_hoc_count']))
+  events_text.gsub!('%{year}', campaign_date('year'))
+
+-if @company
+  -company_name = hoc_s("company_" + @company)
+  -company_total = format_integer_with_commas(company_count)
+  = succeed "." do
+    = events_text + ","
+    = hoc_s(:map_header_company).gsub('#', company_total).gsub('company', company_name)
+-elsif @country != 'us'
+  -country_total = format_integer_with_commas(country_count)
+  -country_total = "0" if country_total == ""
+  = succeed "." do
+    = events_text + ","
+    = hoc_s(:map_header_country).gsub('#', format_integer_with_commas(country_total)).gsub('%{country}', country_full_name)
+-else
+  = succeed "." do
+    = events_text

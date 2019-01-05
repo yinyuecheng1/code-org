@@ -1,0 +1,36 @@
+---
+transport:
+  name: sftp
+driver:
+  name: docker
+  use_sudo: false
+  privileged: true
+
+provisioner:
+  name: chef_zero
+  data_path: test/shared
+  require_chef_omnibus: 12.6.0
+
+platforms:
+  - name: ubuntu-14.04
+    run_list:
+      - recipe[apt]
+
+suites:
+  - name: default
+    run_list:
+      - recipe[cdo-nodejs]
+  - name: upgrade
+    steps:
+      - run_list:
+        - recipe[cdo-nodejs]
+        attributes:
+          cdo-nodejs:
+            version: '0.12'
+            npm_version: '2'
+      - run_list:
+        - recipe[cdo-nodejs]
+        attributes:
+          cdo-nodejs:
+            version: '6.x'
+            npm_version: '3'

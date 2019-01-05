@@ -1,0 +1,19 @@
+has_lesson_plan true
+
+stage 'Black & White Pixelation Tutorial'
+level 'Pixelation 4x4 Empty'
+
+stage 'Black & White Pixelation Freeplay'
+level 'Pixelation 1'
+
+stage 'Color Pixelation Tutorial'
+level 'Pixelation - Lesson 15 - Complete 3-bit color'
+level 'Pixelation - Lesson 15 - Color Shades'
+level 'Pixelation - Lesson 15 - Color Shades 4x4'
+
+stage 'Color Pixelation Examples'
+level 'Pixelation Flappy'
+level 'Pixelation Bee'
+
+stage 'Color Pixelation Freeplay'
+level 'Mixing Colors'

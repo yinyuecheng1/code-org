@@ -1,0 +1,53 @@
+@import 'color';
+@import 'font';
+
+#warning-banner {
+  position: absolute;
+  z-index: 1000;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 20px;
+  font-size: 13px;
+  line-height: 16px;
+  background-color: $purple;
+  color: white;
+  display: flex;
+  align-items: center;
+
+  #dismiss-icon {
+    margin-left: auto;
+  }
+
+  #warning-icon {
+    padding-right: 10px;
+  }
+
+  a, a:visited {
+    font-family: $gotham-extra-bold;
+    color: white;
+    text-decoration: underline;
+  }
+  a:hover {
+    background: transparent;
+  }
+
+  #message {
+    float: left;
+    width: 90%;
+  }
+
+  #hide-warning {
+    position: relative;
+  }
+
+  #hide-warning .close {
+    float: right;
+    font-size: 20px;
+  }
+}
+
+.warning-sign {
+  font-size: 16px;
+  color: $mustardyellow;
+}

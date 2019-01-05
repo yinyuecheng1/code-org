@@ -1,0 +1,29 @@
+%script{src: minifiable_asset_path('js/maker/setup.js')}
+
+:css
+  .main {
+    width: 80%;
+    max-width: 800px;
+  }
+
+  .maker-setup img {
+    border-radius: 50%;
+    float: right;
+    margin: 0 0 15px 10px;
+  }
+
+.maker-setup
+  :markdown
+    # CS Discoveries Maker Toolkit Pilot IT Setup
+
+    ## The Circuit Playground
+
+    <center><a href="https://www.adafruit.com/product/3399"><img src="#{image_url('maker/circuit-playground-200.jpg')}" width=200></a></center>
+
+    The Adafruit [Circuit Playground](https://www.adafruit.com/product/3399) is a programmable circuit board with built-in components that make getting started with physical computing quick and fun.
+
+    In the [Computer Science Discoveries curriculum](https://code.org/educate/csd) being piloted this school year, we are using the Circuit Playground tethered via USB to students' computers to allow for online curriculum integration and interactive debugging of programs.
+
+    Please follow the instructions below to connect your board to Code.org.
+
+    <div id="setup-status-mount"/>

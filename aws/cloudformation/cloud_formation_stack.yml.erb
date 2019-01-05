@@ -1,0 +1,549 @@
+<%
+require 'active_support/core_ext/numeric/bytes'
+require 'cdo/aws/cloudfront'
+
+origin = "'https://github.com/code-dot-org/code-dot-org.git'"
+
+if rack_env?(:adhoc) && RakeUtils.git_branch == branch
+  # Current branch is the one we're deploying to the adhoc server,
+  # so check whether it's up-to-date with the remote before we get any further.
+  unless `git remote show #{origin} 2>&1 | grep \"(up to date)\" | grep \"#{branch}\" | wc -l`.strip.to_i > 0
+    raise 'Current adhoc branch needs to be up-to-date with GitHub branch of the same name, otherwise deploy will fail.
+To specify an alternate branch name, run `rake adhoc:start branch=BRANCH`.'
+  end
+else
+  # Either not adhoc or deploying a different branch than the current local one;
+  # simply check that the branch exists on GitHub before deploying.
+  unless system("git ls-remote --exit-code #{origin} #{branch} > /dev/null")
+    raise 'Current branch needs to be pushed to GitHub with the same name, otherwise deploy will fail.
+  To specify an alternate branch name, run `rake stack:start branch=BRANCH`.'
+  end
+end
+
+commit = ENV['COMMIT'] || `git ls-remote origin #{branch}`.split.first
+ami = commit[0..4]
+
+frontends = @frontends = rack_env?(:production) || ENV['FRONTENDS']
+database = @database = ENV['DATABASE']
+load_balancer = @load_balancer = !rack_env?(:adhoc) || ENV['FRONTENDS']
+
+unless dry_run
+  update_certs.call unless load_balancer
+  update_cookbooks.call
+  update_bootstrap_script.call
+end
+
+require 'cdo/cron'
+
+self.log_resource_filter.push 'FrontendLaunchConfig', 'ASGCount'
+
+# Don't provision daemon where manually-provisioned daemon instances already exist.
+# Track Instance ID of manually-provisioned daemon instances that already exist and can't be referenced dynamically
+# TODO migrate stacks to cloudformation-provisioned instances.
+if %w(autoscale-prod test staging levelbuilder).include? stack_name
+  self.daemon_instance_id = {
+    'autoscale-prod' => 'i-436d69dd',
+    'test' => 'i-f85e6666',
+    'staging' => 'i-57a3afc7',
+    'levelbuilder' => 'i-03a540ccf70cc8138'
+  }[stack_name]
+else
+  self.daemon = 'Daemon'
+end
+
+# Use alternate legacy EC2 instance resource name for standalone-adhoc stack.
+self.daemon = 'WebServer' if rack_env?(:adhoc) && !frontends
+-%>
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: AWS CloudFormation Template for Code.org application
+Parameters:
+  InstanceType:
+    Type: String
+    Default: <%=INSTANCE_TYPE%>
+  Branch:
+    Type: String
+    Default: <%=branch%>
+<% if database -%>
+  DatabaseUsername:
+    Type: String
+    Default: master
+    MaxLength: 16
+  DatabasePassword:
+    Type: String
+    NoEcho: true
+    MinLength: 8
+    MaxLength: 41
+<% end -%>
+Resources:
+<% if frontends -%>
+  # Signal when the instance is fully provisioned and ready for AMI creation.
+  AMICreate<%=ami%>:
+    Type: AWS::CloudFormation::WaitCondition
+    DependsOn: WebServerAMI
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT60M
+        Count: 1
+  WebServerAMI:
+    Type: AWS::EC2::Instance
+    DependsOn: <%=[daemon].compact.to_json%>
+    Properties:
+      ImageId: <%=IMAGE_ID%>
+      InstanceType: !Ref InstanceType
+      IamInstanceProfile: !ImportValue IAM-FrontendInstanceProfile
+      SecurityGroupIds: [!ImportValue VPC-FrontendSecurityGroup]
+      SubnetId: !ImportValue VPC-Subnet<%=azs.first%>
+      KeyName: <%=SSH_KEY_NAME%>
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 64
+            VolumeType: gp2
+      UserData:
+        Fn::Base64: <%=file('bootstrap_chef_stack.sh.erb',
+          resource_id: "AMICreate#{ami}",
+          node_name: 'ami-$INSTANCE_ID',
+          run_list: [
+            local_mode ? 'recipe[cdo-apps]' : 'role[unmonitored-frontend]'
+          ],
+          commit: commit,
+          shutdown: true,
+          daemon: false
+        )%>
+  AMI<%=ami%>: <%= lambda_fn.call 'AMIManager',
+    DependsOn: "AMICreate#{ami}",
+    InstanceId: {Ref: "WebServerAMI" } %>
+
+  ASGCount: <%= lambda_fn.call 'CountASG',
+    Default: {
+      MinSize: 2,
+      MaxSize: 20,
+      DesiredCapacity: 2
+    },
+    AutoScalingGroupTags: [
+      {Key: 'aws:cloudformation:stack-id', Value: {Ref: 'AWS::StackId'}},
+      {Key: 'aws:cloudformation:logical-id', Value: 'Frontends'}
+    ],
+    LaunchConfiguration: {Ref: 'FrontendLaunchConfig'}
+  %>
+<% end -%>
+<% if load_balancer -%>
+  # TODO hourofcode.com and csedweek.org load balancers should be added to this template.
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+<% raise "LoadBalancer name [#{stack_name}] cannot be longer than 32 characters" if stack_name.length > 32 -%>
+      LoadBalancerName: !Ref AWS::StackName
+      CrossZone: true
+      SecurityGroups: [!ImportValue VPC-ELBSecurityGroup]
+      Subnets: <%= public_subnets.to_json %>
+      LBCookieStickinessPolicy:
+        - PolicyName: CookieBasedPolicy
+          CookieExpirationPeriod: 30
+      Listeners:
+        - LoadBalancerPort: 80
+          InstancePort: 80
+          Protocol: HTTP
+          PolicyNames: [CookieBasedPolicy]
+        - LoadBalancerPort: 443
+          InstancePort: 80
+          Protocol: HTTPS
+          SSLCertificateId: <%=certificate_arn%>
+          PolicyNames: [CookieBasedPolicy]
+      HealthCheck:
+        Target: HTTP:80/health_check
+        HealthyThreshold: 2
+        UnhealthyThreshold: 5
+        Interval: 10
+        Timeout: 5
+      ConnectionDrainingPolicy:
+        Enabled: true
+        Timeout: 300
+<%   if !frontends && daemon -%>
+      Instances: [!Ref <%=daemon%>]
+<%   end -%>
+<% end -%>
+
+<% if frontends -%>
+  Frontends:
+    DependsOn: [ASGCount]
+    Type: AWS::AutoScaling::AutoScalingGroup
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT50M
+        Count: !GetAtt [ASGCount, DesiredCapacity]
+      AutoScalingCreationPolicy:
+        MinSuccessfulInstancesPercent: 80
+    UpdatePolicy:
+      AutoScalingRollingUpdate:
+        MaxBatchSize: 20
+        MinInstancesInService: !GetAtt [ASGCount, DesiredCapacity]
+        MinSuccessfulInstancesPercent: 80
+        PauseTime: PT50M
+        SuspendProcesses: [ScheduledActions]
+        WaitOnResourceSignals: true
+    Properties:
+      AutoScalingGroupName: !Sub "Frontends-${AWS::StackName}"
+      VPCZoneIdentifier: <%= subnets.to_json %>
+      LaunchConfigurationName: !Ref FrontendLaunchConfig
+      MinSize: !GetAtt [ASGCount, MinSize]
+      MaxSize: !GetAtt [ASGCount, MaxSize]
+      DesiredCapacity: !GetAtt [ASGCount, DesiredCapacity]
+      HealthCheckType: EC2 # TODO: use ELB health check that returns healthy even when fully loaded.
+      HealthCheckGracePeriod: 2000
+      LoadBalancerNames: [Ref: LoadBalancer]
+      MetricsCollection:
+        - Granularity: 1Minute
+  FrontendLaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      ImageId: !GetAtt [AMI<%=ami%>, ImageId]
+      InstanceType: !Ref InstanceType
+      IamInstanceProfile: !ImportValue IAM-FrontendInstanceProfile
+      SecurityGroups: [!ImportValue VPC-FrontendSecurityGroup]
+      KeyName: <%=SSH_KEY_NAME%>
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 64
+            VolumeType: gp2
+      UserData:
+        Fn::Base64: <%=file('bootstrap_frontend.sh.erb',
+          resource_id: 'Frontends',
+          hook: 'WebServerHook-${AWS::StackName}',
+          auto_scaling_group: 'Frontends-${AWS::StackName}',
+          node_name: 'fe-$INSTANCE_ID',
+          commit: commit)%>
+  CPUScalingPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AutoScalingGroupName: !Ref Frontends
+      EstimatedInstanceWarmup: 300
+      PolicyType: TargetTrackingScaling
+      TargetTrackingConfiguration:
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ASGAverageCPUUtilization
+        TargetValue: 50
+  WebServerHook:
+    Type: AWS::AutoScaling::LifecycleHook
+    Properties:
+      LifecycleHookName: !Sub "WebServerHook-${AWS::StackName}"
+      AutoScalingGroupName: !Ref Frontends
+      LifecycleTransition: 'autoscaling:EC2_INSTANCE_LAUNCHING'
+      DefaultResult: ABANDON
+      HeartbeatTimeout: 1200 # seconds = 20 minutes
+      NotificationTargetARN: !Ref WebServerHookTopicNew
+      RoleARN: !ImportValue IAM-LifecycleHookRoleARN
+  WebServerHookEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: !Sub "Auto Scaling Events for ${AWS::StackName}."
+      EventPattern:
+        source: [aws.autoscaling]
+        detail-type:
+        - EC2 Instance Launch Successful
+        - EC2 Instance Terminate Successful
+        - EC2 Instance Launch Unsuccessful
+        - EC2 Instance Terminate Unsuccessful
+        - EC2 Instance-launch Lifecycle Action
+        - EC2 Instance-terminate Lifecycle Action
+        detail:
+          AutoScalingGroupName: [!Ref Frontends]
+      State: ENABLED
+      Targets:
+      - Arn: !ImportValue SlackEvent
+        Id: WebServerHookTarget
+  WebServerHookEventPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !ImportValue SlackEvent
+      Action: 'lambda:InvokeFunction'
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt WebServerHookEventRule.Arn
+  WebServerHookTopicNew: {Type: 'AWS::SNS::Topic'}
+<%  if environment == :production -%>
+  HealthEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: !Sub "Health Events for ${AWS::StackName}."
+      EventPattern:
+        source: [aws.health]
+      State: ENABLED
+      Targets:
+      - Arn: !ImportValue SlackEvent
+        Id: HealthEventRuleTarget
+  HealthEventPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !ImportValue SlackEvent
+      Action: 'lambda:InvokeFunction'
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt HealthEventRule.Arn
+  ClassroomScaleUp:
+    Type: AWS::AutoScaling::ScheduledAction
+    Properties:
+      AutoScalingGroupName: !Ref Frontends
+      MinSize: 4
+      Recurrence: <%= Cdo::Cron.weekdays_at '4am' %>
+  ClassroomScaleDown:
+    Type: AWS::AutoScaling::ScheduledAction
+    Properties:
+      AutoScalingGroupName: !Ref Frontends
+      MinSize: 3
+      Recurrence: <%= Cdo::Cron.weekdays_at '1pm' %>
+  WeekendScaleDown:
+    Type: AWS::AutoScaling::ScheduledAction
+    Properties:
+      AutoScalingGroupName: !Ref Frontends
+      MinSize: 2
+      Recurrence: <%= Cdo::Cron.weekly_at '8pm Friday' %>
+  WeekendScaleUp:
+    Type: AWS::AutoScaling::ScheduledAction
+    Properties:
+      AutoScalingGroupName: !Ref Frontends
+      MinSize: 3
+      Recurrence: <%= Cdo::Cron.weekly_at '4am Monday', time_zone: 'London' %>
+<%   end -%>
+<% end -%>
+# Route53 (DNS) and CloudFront (CDN) resources:
+# TODO hourofcode.com and csedweek.org DNS/CDN resources should be added to this template.
+<%
+  %w(Dashboard Pegasus).each do |app|
+    app_domain = app == 'Dashboard' ? studio_subdomain : subdomain
+-%>
+  <%=app%>DNS:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneName: <%=domain%>.
+      RecordSets:
+        - Name: <%=app_domain%>
+          Type: A
+<%   if cdn_enabled -%>
+          AliasTarget:
+            DNSName: !GetAtt [<%=app%>CDN, DomainName]
+            HostedZoneId: Z2FDTNDATAQYW2 # static ID for cloudfront aliases
+<%   elsif load_balancer -%>
+          AliasTarget:
+            DNSName: !GetAtt [LoadBalancer, CanonicalHostedZoneName]
+            HostedZoneId: !GetAtt [LoadBalancer, CanonicalHostedZoneNameID]
+<%   else -%>
+          TTL: <%= DNS_TTL %>
+          ResourceRecords: [!GetAtt <%=daemon%>.PublicIp]
+<%   end -%>
+<%   if cdn_enabled -%>
+  <%=app%>CDN:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig: <%= AWS::CloudFront.distribution_config(
+        app.downcase.to_sym,
+        subdomain('origin'),
+        app == 'Dashboard' ?
+          [studio_subdomain] :
+          [subdomain] + (CDO.partners + ['advocacy']).map{|x| subdomain(nil, x)},
+        {
+          AcmCertificateArn: certificate_arn,
+          MinimumProtocolVersion: 'TLSv1',
+          SslSupportMethod: domain == 'code.org' ? 'vip' : 'sni-only'
+        }
+      )%>
+<%   end -%>
+<% end -%>
+<% if cdn_enabled -%>
+  OriginDNS:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneName: <%=domain%>.
+      RecordSets:
+        - Name: "<%=subdomain('origin')%>"
+          Type: A
+<%   if load_balancer -%>
+          AliasTarget:
+            HostedZoneId: !GetAtt [LoadBalancer, CanonicalHostedZoneNameID]
+            DNSName: !GetAtt [LoadBalancer, CanonicalHostedZoneName]
+<%   else -%>
+          TTL: <%= DNS_TTL %>
+          ResourceRecords: [!GetAtt <%=daemon%>.PublicIp]
+<%   end -%>
+<% end -%>
+<% if frontends -%>
+<%   cache_node_type = rack_env?(:production) ? 'cache.r3.large' : 'cache.t2.micro' -%>
+  GeocoderSubnetGroup:
+    Type: AWS::ElastiCache::SubnetGroup
+    Properties:
+      Description: Geocoder Cache Subnet Group
+      SubnetIds: <%= subnets.to_json %>
+  GeocoderGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupDescription: Geocoder Replication Group
+      NumCacheClusters: 3
+<%  if cache_node_type.include? 'cache.t2' %>
+      AutomaticFailoverEnabled: false
+<%  end-%>
+      Engine: redis
+      CacheNodeType: <%= cache_node_type %>
+      SecurityGroupIds: [!ImportValue VPC-RedisSecurityGroup]
+      CacheSubnetGroupName: !Ref GeocoderSubnetGroup
+  MemcachedParameterGroup:
+    Type: AWS::ElastiCache::ParameterGroup
+    Properties:
+      CacheParameterGroupFamily: memcached1.4
+      Description: Memcached modified max_item_size.
+      Properties:
+        max_item_size: <%=64.megabytes%>
+  Memcached:
+    Type: AWS::ElastiCache::CacheCluster
+    Properties:
+      CacheNodeType: <%= cache_node_type %>
+      CacheParameterGroupName: !Ref MemcachedParameterGroup
+      CacheSubnetGroupName: !Ref GeocoderSubnetGroup
+      ClusterName: <%=stack_name[0..19]%> # Max 20 chars
+      Engine: memcached
+      NumCacheNodes: 2
+      AZMode: cross-az
+      PreferredAvailabilityZones: <%= availability_zones.first(2).to_json %>
+      VpcSecurityGroupIds: [!ImportValue VPC-MemcachedSecurityGroup]
+<% end -%>
+<% unless daemon -%>
+  ActivitiesQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      ReceiveMessageWaitTimeSeconds: 20
+      VisibilityTimeout: 15
+      QueueName: !Sub "activities-${AWS::StackName}"
+      RedrivePolicy:
+        maxReceiveCount: 3
+        deadLetterTargetArn: !GetAtt [ActivitiesDeadQueue, Arn]
+  ActivitiesDeadQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      ReceiveMessageWaitTimeSeconds: 20
+      VisibilityTimeout: 15
+      QueueName: !Sub "activities_dead-${AWS::StackName}"
+<% end -%>
+<% if daemon -%>
+  <%=daemon%>:
+    Type: AWS::EC2::Instance
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT2H
+    Properties:
+      ImageId: <%=IMAGE_ID%>
+      InstanceType: !Ref InstanceType
+      IamInstanceProfile: !ImportValue IAM-<%=environment == :adhoc ? 'Standalone' : 'Staging'%>InstanceProfile
+      KeyName: <%=SSH_KEY_NAME%>
+      Tags:
+      - Key: Name
+        Value: !Ref AWS::StackName
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 64
+            VolumeType: gp2
+      UserData:
+        Fn::Base64: <%=file('bootstrap_chef_stack.sh.erb',
+          resource_id: daemon,
+          node_name: '$STACK',
+          run_list: [
+            local_mode ? 'recipe[cdo-apps]' : 'role[daemon]'
+          ],
+          commit: nil, # track branch
+          shutdown: false,
+          daemon: true
+        )%>
+      NetworkInterfaces:
+      - AssociatePublicIpAddress: true
+        DeviceIndex: 0
+        SubnetId: !ImportValue VPC-PublicSubnet<%=azs.first%>
+        GroupSet:
+          - !ImportValue VPC-FrontendSecurityGroup
+          - !ImportValue VPC-GatewaySecurityGroup
+<%  unless load_balancer -%>
+          - !ImportValue VPC-ELBSecurityGroup # Accept HTTP traffic on daemon
+<%  end -%>
+<%end-%>
+  DaemonStorageUtilizationAlarm:
+    Type: "AWS::CloudWatch::Alarm"
+    Properties:
+      AlarmActions:
+        - !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:CDO-<%= rack_env?(:production) ? 'Urgent' : 'LowPriority'%>"
+      AlarmDescription: Send page if daemon storage utilization exceeds 80% for an hour
+      AlarmName: <%="#{stack_name}_daemon_high_storage_utilization" %>
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: Filesystem
+          Value: '/dev/xvda1'
+        - Name: MountPath
+          Value: '/'
+        - Name: InstanceId
+          Value: <%= daemon_instance_id || "!Ref #{daemon}" %>
+      EvaluationPeriods: 60
+      MetricName: DiskSpaceUtilization
+      Namespace: 'System/Linux'
+      Period: 60
+      Statistic: Average
+      Threshold: 80
+      TreatMissingData: missing
+  DaemonMemoryUtilizationAlarm:
+    Type: "AWS::CloudWatch::Alarm"
+    Properties:
+      AlarmActions:
+        - !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:CDO-<%= rack_env?(:production) ? 'Urgent' : 'LowPriority'%>"
+      AlarmDescription: Send page if daemon memory utilization exceeds 87% for 5 minutes
+      AlarmName: <%="#{stack_name}_daemon_high_memory_utilization" %>
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: InstanceId
+          Value: <%= daemon_instance_id || "!Ref #{daemon}" %>
+      EvaluationPeriods: 5
+      MetricName: MemoryUtilization
+      Namespace: 'System/Linux'
+      Period: 60
+      Statistic: Maximum
+      Threshold: 87
+      TreatMissingData: missing
+<% if database -%>
+  Database:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: !Ref AWS::StackName
+      DBInstanceClass: db.t2.micro
+      AllocatedStorage: 64
+      StorageType: gp2
+      Engine: mysql
+      EngineVersion: 5.7.23
+      DBParameterGroupName: !Ref DatabaseParameters
+      VPCSecurityGroups: [!ImportValue VPC-DBSecurityGroup]
+      DBSubnetGroupName: !ImportValue VPC-DBSubnetGroup
+      MasterUsername: !Ref DatabaseUsername
+      MasterUserPassword: !Ref DatabasePassword
+  DatabaseParameters:
+    Type: AWS::RDS::DBParameterGroup
+    Properties:
+      Description: !Sub "Parameters for ${AWS::StackName}."
+      Family: mysql5.7
+      Parameters:
+        innodb_autoinc_lock_mode: 2
+        innodb_flush_log_at_trx_commit: 0
+        innodb_flush_method: O_DIRECT
+        sync_binlog: 0
+        tx_isolation: READ-COMMITTED
+        skip_name_resolve: 1
+        performance_schema: 1
+        innodb_buffer_pool_dump_at_shutdown: 1
+        innodb_buffer_pool_load_at_startup: 1
+<% end -%>
+Outputs:
+  DashboardURL:
+    Value: "https://<%=studio_subdomain%>"
+    Description: Dashboard URL
+  PegasusURL:
+    Value: "https://<%=subdomain%>"
+    Description: Pegasus URL
+# display information about how to ssh to console if this is a single instance adhoc environment
+<% if rack_env?(:adhoc) && !frontends -%>
+  SSHServerName:
+    Value: <%=cdn_enabled ? subdomain('origin') : subdomain%>
+    Description: SSH server name
+<%end-%>

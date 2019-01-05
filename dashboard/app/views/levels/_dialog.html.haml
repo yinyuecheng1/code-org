@@ -1,0 +1,23 @@
+/ This partial contains general logic+view for displaying modal dialogs and handling submit button interactions.
+- app = local_assigns[:app]
+
+- unless app == 'external'
+  .buttons{class: @level.properties['submittable'] == 'true' ? 'submittable' : nil}
+    - if local_assigns[:previous_button]
+      %a.btn.btn-large.btn-primary.previousPageButton
+        =t('previous_page')
+    - if local_assigns[:next_button]
+      %a.btn.btn-large.btn-primary.nextPageButton
+        =t('next_page')
+    - elsif local_assigns[:continue_button]
+      %a.btn.btn-large.btn-primary.next-stage.submitButton
+        =t('continue')
+    - else
+      %a.btn.btn-large.btn-primary.next-stage.submitButton
+        =t('submit')
+      - if @level.properties['submittable']
+        %a.btn.btn-large.btn-primary.unsubmitButton{style: 'display: none'}
+          =t('unsubmit')
+.clear
+
+%script{src: minifiable_asset_path('js/levels/_dialog.js')}

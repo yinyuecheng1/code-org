@@ -1,0 +1,11 @@
+skip_frontmatter: true
+inherits_from: .haml-lint_todo.yml
+
+linters:
+  TrailingWhitespace:
+    exclude:
+      - '/**/pegasus/**/*.haml'
+      - 'pegasus/**/*.haml'
+exclude:
+- '/**/pegasus/test/fixtures/**/*.haml'
+- 'pegasus/test/fixtures/**/*.haml'

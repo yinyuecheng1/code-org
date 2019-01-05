@@ -1,0 +1,35 @@
+- diamond_supporters = DB[:cdo_donors].where(level_s:'diamond').order(:url_s).all
+- platinum_supporters = DB[:cdo_donors].where(level_s:'platinum').order(:url_s).all
+- gold_supporters = DB[:cdo_donors].where(level_s:'gold').order(:url_s).all
+- diamond_supporters.shuffle!
+- platinum_supporters.shuffle!
+- gold_supporters.shuffle!
+
+%link{rel:'stylesheet', type:'text/css', href:'/css/donors.css'}
+
+#donorslider
+  .container_responsive
+    #donorheader{style: "position:relative; height:40px"}
+      %h1
+        = I18n.t(:homepage_header_donors)
+
+      #donorlinks.desktop-feature
+        %a{href: "/about/donors"}
+          = I18n.t(:homepage_donors_seall)
+        &nbsp; &nbsp; &nbsp;
+        %a{href: "/donate"}
+          = I18n.t(:homepage_donors_donate)
+
+    .donor-slider
+      - diamond_supporters.each_with_index do |supporter|
+        %a{:href=>supporter[:url_s], :target=> "_blank"}
+          = "#{supporter[:name_s]}, "
+      - platinum_supporters.each_with_index do |supporter|
+        %a{:href=>supporter[:url_s], :target=> "_blank"}
+          = "#{supporter[:name_s]}, "
+      - gold_supporters.each_with_index do |supporter, index|
+        %a{:href=>supporter[:url_s], :target=> "_blank"}
+          - if index == gold_supporters.length-1
+            = "#{supporter[:name_s]}"
+          - else
+            = "#{supporter[:name_s]}, "

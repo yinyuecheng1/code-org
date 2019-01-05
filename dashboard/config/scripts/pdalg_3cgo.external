@@ -1,0 +1,19 @@
+name 'PDAlg 3CGo'
+skip_dialog true
+
+markdown <<MARKDOWN
+# Getting Started > Ready? Set? Go!
+
+By completing this stage, you should have:
+
+- Reviewed the course details
+- Planned your participation in this online PD
+
+In the next stage, we will:
+
+- Gather student programming artifacts and share them with your peers
+
+Click “Continue” below to move on.
+
+<a class="btn btn-large btn-primary next-stage submitButton">Continue</a>
+MARKDOWN

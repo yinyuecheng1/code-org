@@ -1,0 +1,17 @@
+= view :top_hoc_tutorial_applab, image_match_youtube_height: false
+
+- minecraft_img_url = CDO.code_org_url("/shared/images/fill-485x260/courses/logo_tall_aquatic.jpg")
+
+.col-50
+  .tutorial-tile
+    %a{href: "/minecraft"}
+      %img.tutorial-tile-img{src: minecraft_img_url}
+    .tutorial-info
+      %span
+        %h3.tutorial-info-h= I18n.t(:minecraft_subtitle)
+        .smalltext= I18n.t(:minecraft_agent_description)
+      %span
+        %a{href: "/minecraft"}
+          %button.tutorial-info-start.tutorial-gray= I18n.t(:go)
+        .tutorial-info-guide
+          %a{href: "/hourofcode/mc"}= I18n.t(:hoc2018_mc_teacher_guide)

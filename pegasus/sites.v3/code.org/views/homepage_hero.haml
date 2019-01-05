@@ -1,0 +1,166 @@
+:ruby
+  show_single_hero = Homepage.show_single_hero
+  heroes_arranged, hero_display_time = Homepage.get_heroes_arranged(request)
+  actions = Homepage.get_actions
+
+- main_actions = capture_haml do
+  - if show_single_hero == "create"
+    .hero-message
+      = hoc_s(:codeorg_homepage_hoc2018_header_line2_mobile)
+  .action_buttons
+    - actions.each do |entry|
+      - if ["cta_button", "cta_button_solid_white", "cta_button_hollow_white"].include? entry[:type]
+        .action
+          %a.linktag#hero-hoc{href: entry[:url]}
+            - extra_class = "herohocbutton-solid-white" if entry[:type] == "cta_button_solid_white"
+            - extra_class = "herohocbutton-hollow-white" if entry[:type] == "cta_button_hollow_white"
+            %button.herohocbutton{class: extra_class}= I18n.t(entry[:text])
+      - elsif entry[:type] == "video"
+        .action
+          %button.clicktag.herohocbutton#hero-video{onclick: "return showVideo_mainvideo();"}
+            %img.video-play-icon{src: "/shared/images/fit-48/play-button.png"}
+            %span#playtext= I18n.t(entry[:text])
+
+  .clear{style: "clear: both"}
+
+#hero{style: "position:relative"}
+  - heroes_arranged.each_with_index do |entry, index|
+    -# Preload the first hero image to render immediately, lazy-load the rest to conserve bandwidth.
+    - if index == 0
+      -#
+        Use Link rel=preload HTTP headers to preload as early as possible.
+        Two headers with inverse media queries conditionally load the correctly-sized image.
+      - response.add_header 'Link', "<#{entry[:image]}>; rel=preload; as=image; media=\"#{css_retina?(false)}\";"
+      - response.add_header 'Link', "<#{entry[:image].gsub('.jpg', '_2x.jpg')}>; rel=preload; as=image; media=\"#{css_retina?}\";"
+      .widehero#fullwidth0{style: "background-position: #{entry[:centering]}; background-image: url(#{entry[:image]});"}
+    - else
+      .widehero.lazyload{id: "fullwidth#{index}", "data-bg"=> "#{entry[:image]}", style: "background-position: #{entry[:centering]}"}
+
+  #fullwidth
+    - if request.site == 'code.org'
+      = view :header
+    - else
+      #desktop-header.desktop-feature
+        = view :header
+      #mobile-header.mobile-headers.mobile-feature
+        = view :mobile_header_responsive
+
+  - if show_single_hero
+    #actions
+      = main_actions
+
+  #caption_container.container_responsive
+    - unless show_single_hero
+      .col-66.desktop-feature{style: "position:relative;"}
+        - heroes_arranged.each_with_index do |entry, index|
+          - unless entry[:text].nil_or_empty? || show_single_hero
+            - text = I18n.t(entry[:text]).dup
+
+            -# Replace special tags
+            - text.gsub!("#student_count", format_integer_with_commas(fetch_user_metrics['number_students']))
+            - text.gsub!("#served", format_integer_with_commas(fetch_hoc_metrics['started']))
+            - text.gsub!("#loc", format_integer_with_commas(fetch_metrics['lines_of_code']))
+
+            - unless text.nil_or_empty?
+              - lines = text.lines
+              - if entry[:textposition] == "bottom"
+                - position_class = "homepage-caption-bottom"
+              .captionarea{id: "captionarea#{index}", class: position_class}
+                -# Nokogiri::HTML is use to strip any HTML tags.
+                -# Some translated quotes we were using had <b> tags and some broken <b/> tags.
+                .caption.caption1{style: "left: 50px; top: 50px"}
+                  = Nokogiri::HTML(lines[0])
+                .caption.caption2{style: "left: 30px; top: 95px"}
+                  = Nokogiri::HTML(lines[1])
+                .caption.caption3.smallcaption{style: "left: 40px; top: 140px"}
+                  = Nokogiri::HTML(lines[2])
+
+        &nbsp;
+
+        -# Maintains a large empty chunk so that the hero image remains large and visible at all browser sizes.
+        #blankspaceleftdesktop.desktop-feature
+
+      #actions.col-33
+        = main_actions
+
+      #blankspaceleftmobile.mobile-feature
+
+  .clear{style: "clear: both"}
+
+:javascript
+  // Swap in 2x versions of the hero image URLs for retina displays.
+  if (window.matchMedia('#{css_retina?}').matches) {
+    Array.prototype.forEach.call(document.querySelectorAll('#hero .widehero'), function(item) {
+      if (item.dataset.bg) {
+        item.dataset.bg = item.dataset.bg.replace(".jpg", "_2x.jpg");
+      }
+      if (item.style['background-image']) {
+        item.style['background-image'] = item.style['background-image'].replace(".jpg", "_2x.jpg");
+      }
+    });
+  }
+
+  var petition;
+
+  $(document).ready(function() {
+    // For IE8, can't start with opacity in the HTML, so we made things display: none.  Now we show them but
+    // set opacity to 0, ready for code to start showing them by fading them in.
+    $(".caption").css({display: "block", opacity: 0});
+
+    showQuote(null, 0);
+  });
+
+  function showQuote(lastImage, nextImage)
+  {
+    if (lastImage !== null)
+    {
+      var lastImageId = "#captionarea" + lastImage;
+      //console.log("hiding", lastImageId);
+      $(lastImageId + " .captionspecial").animate({left: "50px", opacity:0}, { duration: 2000 });
+      $(lastImageId + " .caption1").animate({left: "50px", opacity:0}, { duration: 2000 });
+      $(lastImageId + " .caption2").animate({left: "30px", opacity:0}, { duration: 2000 });
+      $(lastImageId + " .caption3").animate({opacity:0}, { duration: 2000 });
+    }
+
+    if (nextImageId !== null)
+    {
+      var nextImageId = "#captionarea" + nextImage;
+      //console.log("showing", nextImageId);
+      $(nextImageId + " .captionspecial").delay(1500).animate({ left: "0px", opacity: 0.8 }, { duration: 2000 });
+      $(nextImageId + " .caption1").delay(1500).animate({ left: "0px", opacity: 0.8 }, { duration: 2000 });
+      $(nextImageId + " .caption2").delay(2000).animate({ left: "60px", opacity: 0.8 }, { duration: 2000 });
+      $(nextImageId + " .caption3").delay(4500).animate({ opacity: 0.6 }, { duration: 2000 });
+    }
+  }
+
+  function adjustScroll(destination)
+  {
+    $('html, body').animate({
+      scrollTop: $("#" + destination).offset().top
+    }, 1000);
+  }
+
+  var currentImage = 0;
+  var timerId;
+  var videoStarted = false;
+
+  function cycleImage()
+  {
+    var numWideHeroes = $(".widehero").length;
+
+    var lastImage = currentImage;
+    var nextImage = (currentImage + 1) % numWideHeroes;
+    $("#fullwidth" + currentImage).fadeTo(4000, 0);
+    $("#fullwidth" + nextImage).fadeTo(4000, videoStarted ? 0.3 : 1);
+    currentImage = nextImage;
+
+    showQuote(lastImage, currentImage);
+  }
+
+  $(document).ready(function() {
+    var numWideHeroes = $(".widehero").length;
+
+    if (numWideHeroes > 1) {
+      timerId = setInterval(cycleImage, #{hero_display_time});
+    }
+  });

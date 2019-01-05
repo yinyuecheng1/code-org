@@ -1,0 +1,21 @@
+%footer#pagefooter
+  #footer-links
+    %ul.hide-responsive-footer-menu
+      %li
+        %a{:href=>"http://support.code.org/hc/en-us/requests/new", :target=>"_blank"}= hoc_s(:footer_menu_contact)
+      %li
+        %a{:href=>"http://support.code.org", :target=>"_blank"}= hoc_s(:footer_menu_support)
+      %li
+        %a{href:resolve_url('/partners'), :target=>"_blank"}=hoc_s(:footer_menu_partners)
+      %li
+        %a{:href=>codeorg_url('/tos'), :target=>"_blank"}= hoc_s(:footer_menu_terms)
+      %li
+        %a{:href=>codeorg_url('/privacy'), :target=>"_blank"}= hoc_s(:footer_menu_privacy)
+    #footer-toggle
+      %a{href: "#"}
+        Code.org
+        %i{:class=>"fa fa-chevron-up"}
+  #copyright
+    = hoc_s(:footer_copyright_message).gsub(/%{current_year}/, "#{Time.now.year}")
+    %br
+    = hoc_s(:footer_trademark_message)

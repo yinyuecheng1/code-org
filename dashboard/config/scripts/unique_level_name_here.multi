@@ -1,0 +1,8 @@
+name 'unique level name here'
+title 'title'
+description 'description here'
+question 'Question'
+right 'right answer1'
+right 'right answer2'
+wrong 'incorrect!'
+wrong 'incorrect 2!'

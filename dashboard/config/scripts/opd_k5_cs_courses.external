@@ -1,0 +1,17 @@
+name 'OPD-K5 CS Courses'
+skip_dialog true
+markdown <<MARKDOWN
+# Planning > Choosing a CS Course
+
+One of the first tiles you'll want to explore on the Teacher Dashboard are found under the "Lesson Plans and Resources" tab. Here's where you'll find all of the free Code Studio curricula we provide to teachers all over the world, including:
+
+ - [Express Course](http://studio.code.org/s/express): approx 35 hours (Ages 8+)
+ - [Pre-reader Express](http://studio.code.org/s/pre-express): approx 15 hours (Ages 4-8) 
+ - [Course A](http://studio.code.org/s/courseA): approx 15 hours (Kindergarten)
+ - [Course B](http://studio.code.org/s/courseB): approx 15 hours (1st Grade)
+ - [Course C](http://studio.code.org/s/courseC): approx 15 hours (2nd Grade)
+ - [Course D](http://studio.code.org/s/courseD): approx 18 hours (3rd Grade)
+ - [Course E](http://studio.code.org/s/courseE): approx 18 hours (4th Grade)
+ - [Course F](http://studio.code.org/s/courseF): approx 18 hours (5th Grade)
+
+MARKDOWN

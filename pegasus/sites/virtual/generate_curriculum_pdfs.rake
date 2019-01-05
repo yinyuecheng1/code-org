@@ -1,0 +1,53 @@
+require_relative '../../src/env'
+require 'cdo/chat_client'
+require 'cdo/rake_utils'
+require 'cdo/tempfile'
+require 'pdf/conversion'
+require src_dir 'curriculum_course'
+
+PDFConversionInfo = Struct.new(:url_path, :src_files, :output_pdf_path)
+
+def pdf_conversions_for_files(file_pattern, url_extension)
+  [].tap do |conversion_infos|
+    Dir.glob(file_pattern).each do |file|
+      extname = File.extname(file)
+      file_path_without_extension = file[0...-(extname.length)]
+      url_path_from_curriculum_without_extension = file_path_without_extension.match(/curriculum-(.*)/)[1]
+      url_path = 'curriculum/' + url_path_from_curriculum_without_extension + url_extension + '?pdf_version=true'
+      conversion_infos << PDFConversionInfo.new(url_path, [file], file_path_without_extension + '.pdf')
+    end
+  end
+end
+
+base_url = ENV['base_url']
+
+all_outfiles = []
+(
+  pdf_conversions_for_files(sites_dir("virtual/curriculum-{#{CurriculumCourse::COURSES_WITH_PDF_GENERATION.join(',')}}/[0-9]*/[^_]*.md"), '') +
+  pdf_conversions_for_files(sites_dir("virtual/curriculum-{#{CurriculumCourse::COURSES_WITH_PDF_GENERATION.join(',')}}/[0-9]*/[^_]*.html"), '.html') +
+  pdf_conversions_for_files(sites_dir("virtual/curriculum-{#{CurriculumCourse::COURSES_WITH_PDF_GENERATION.join(',')}}/docs/[^_]*.md"), '') +
+  pdf_conversions_for_files(sites_dir('virtual/curriculum-docs/**/[^_]*.md'), '')
+).each do |pdf_conversion_info|
+  pdf_v3_path = CurriculumCourse.virtual_to_v3_path(pdf_conversion_info.output_pdf_path)
+  fetchfile_for_pdf = "#{pdf_v3_path}.fetch"
+
+  file fetchfile_for_pdf => pdf_conversion_info.src_files do
+    url = "#{base_url}#{pdf_conversion_info.url_path}"
+
+    begin
+      PDF.generate_from_url(url, pdf_conversion_info.output_pdf_path, verbose: true)
+    rescue Exception => e
+      ChatClient.log "PDF generation failure for #{url}"
+      ChatClient.log "/quote #{e.message}\n#{CDO.backtrace e}", message_format: 'text'
+      raise
+    end
+
+    fetchable_url = RakeUtils.replace_file_with_s3_backed_fetch_file(pdf_conversion_info.output_pdf_path, fetchfile_for_pdf, bucket: 'cdo-fetch')
+
+    ChatClient.log "Created <b>#{pdf_conversion_info.output_pdf_path}</b> and moved to <a href='#{fetchable_url}'>#{fetchable_url}</a></b>."
+  end
+
+  all_outfiles << fetchfile_for_pdf
+end
+
+task default: all_outfiles

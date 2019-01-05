@@ -1,0 +1,158 @@
+---
+ta-IN:
+  hour_of_code: நிரல்வரி நேரம்
+  hello: ஹலோ உலகம்
+  'yes': ஆம்
+  'no': இல்லை
+  select_language: உங்கள் மொழியை தேர்ந்தெடுக்கவும்
+  upgrade_ie_message: Code.org விரைவில் Internet Explorer 8, 9 மற்றும் 10 ஆதரவு நீக்கிவிடும்.
+    தயவுசெய்து ஒரு நவீன உலாவி மேம்படுத்தல்.
+  upgrade_ie_message_csedweek: Code.org விரைவில் Internet Explorer 8, 9 மற்றும் 10
+    ஆதரவு நீக்கிவிடும். தயவுசெய்து ஒரு நவீன உலாவி மேம்படுத்தல்.
+  en: கணினி அறிவியல்
+  computer_science_edweek: கணினி அறிவியல் கல்வி வாரம்
+  csedweek_dates: மார்கழி 8-14, 2014
+  csedweek_banner_hoc: '<a href="http://hourofcode.com" style="color: white; text-decoration:underline;
+    font-weight:bold">ஒரு மணியில் குறியீடு </a> இதோ வருகிறது. அனைத்து ஆசிரியர்கள்
+    மற்றும் அமைப்பாளர்களுக்கு, <a href="http://hourofcode.com" style="color: white;
+    text-decoration:underline; font-weight:bold"> திட்டமிடுங்கள் உங்கள் ஒரு மணியில்
+    குறியீட்டை</a> '
+  csedweek_banner_teachers: '<a href="/csteacher" style="color: white; text-decoration:
+    none; font-weight: 400"> CS நீங்கள் ஒரு கணனி ஆசிரியர? மற்ற CSEdWeek ஆதாரங்களை
+    பார்க்கவும்</a>'
+  anybody_can_learn: எவரும் கற்றுக்கொள்ளலாம்.
+  learn_now: இப்போது கற்க
+  petition_message: ஒவ்வொரு பள்ளியிலும், எல்லா மாணவர்களும் கணினி அறிவியல் கற்க வாய்ப்பு
+    இருக்க வேண்டும்
+  petition_sign_message: நீங்கள் ஒப்புக்கொண்டால்,உங்கள் பெயரை பதியுங்கள்,மற்றவர்களுடன்
+    சேருங்கள்.
+  name: பெயர்
+  email: மின்னஞ்சல்
+  zipcode: அஞ்சல் குறியீடு அல்லது நாடு
+  submit: சமர்ப்பிக்க
+  twentyhours_heading: நமது முதற் கணிப்பொறி அறிவியல் பயிற்சியை செய்ய முயற்சிக்கவும்
+  twentyhours_text: உங்கள் முதல் மணி, குறியீடு பூர்த்தி? மேலும் முக்கிய கணினி அறிவியல்
+    மற்றும் நிரலாக்க கருத்துக்கள் அறிய இந்த படாத்தை பின்பற்றுங்கள்.
+  csedweek_og_title: கணினி அறிவியல் கல்வி வாரம்
+  hoc2014_heading: சேருங்கள்<a href="http://hourofcode.com"> மணி குறியீடை</a><br/>
+    டிசம்பர் 8-14, 2014 <br/>
+  hoc2014_try: இதை முயற்சிக்கவும்
+  hoc2014_teachers: ஆசிரியர்கள்
+  hoc2014_host: சேவையகத்தில் சேர்
+  hoc2014_everyone: ஒவ்வொருவரும்
+  hoc2014_whatishoc: ஒரு மணி நேரக் கணினி குறியீடு என்றால் என்ன?
+  csedweek_map_search_search: தேடு
+  csedweek_map_search_reset: மீட்டமை
+  cded_try_it: இதை முயற்சிக்கவும்
+  try_now: இப்பொழுது முயற்சிக்கவும்
+  california_heading: உங்கள் பள்ளி கூடத்தில் கணினி அறிவியலை கற்றுக்கொடுக்க கேட்டுக்கொள்ளவும்
+  california_button: மேலும் அறிய
+  view_english_site: ஆங்கில தளத்தை பார்க்க
+  non_english_tutorials: 'பயிற்சிகள் பல மொழிகளில் மொழிபெயர்க்கப்பட்டுள்ளது:'
+  write_your_first_program: உங்கள் முதலாவது கணினி நிரலை எழுதவும்
+  all_ages: அனைத்து வயதினரும்
+  n_participants: "# பங்குபற்றுபவர்கள்"
+  go: செல்
+  thank_you_: நன்றி!
+  congratulations: வாழ்த்துக்கள்!
+  get_a_certificate_of_achievement: சாதனைக்கு ஓர் சான்றிதழை பெறுக
+  third_party_gradelevel_kto2: தரம் மழலை-2
+  third_party_gradelevel_2to8: தரம் 2-8
+  third_party_gradelevel_4to12: தரம் 4-12
+  third_party_gradelevel_5to12: தரம் 5-12
+  third_party_gradelevel_6plus: தரம் 6+
+  third_party_gradelevel_8plus: தரம் 8+
+  third_party_price_varies: 'விலை: திட்டங்கள் மாறுபடும்'
+  third_party_price_free: 'விலை: இலவசம்'
+  third_party_price_299: 'விலை: $2.99/பதிவிறக்கம்'
+  third_party_price_individual: 'தனி விலை: இலவச சோதனை & $25/ மாதம்'
+  enter_valid_age: ஒரு செல்லுபடியாகும் வயது தேர்ந்தெடுக்கவும்
+  enter_valid_email: தயவுசெய்து சரியான மின்னஞ்சல் முகவரியை உள்ளிடவும்
+  thanks_for_submitting: சமர்ப்பித்ததற்க்கு நன்றிகள்!
+  share_achievement: உங்கள் சாதனையை பகிரவும்
+  country: நாடு
+  city: நகரம்
+  gender: பாலினம்
+  boys: ஆண்கள்
+  girls: பெண்கள்
+  girls_team: பெண்களின் அணி
+  tell_the_world: உலகத்திடம் சொல்லுங்கள்!
+  thanks_for_voting: வாக்களித்ததற்கு நன்றிகள்!
+  share_on_facebook: பேஸ்புக்கில் பகிரவும்
+  share_on_twitter: ட்விட்டரில் பகிரவும்
+  get_started: தொடங்குக
+  i_agree: நான் ஒப்புக்கொள்கிறேன்
+  participant_select: "-தேர்வு-"
+  participant_student: மாணவர்
+  participant_parent: பெற்றோர்
+  participant_educator: கல்வியாளர்
+  participant_engineer: மென்பொருள் பொறியாளர்
+  participant_other: மேலுள்ளவை எதுவுமில்லை
+  i_am_a: நான் ஒரு
+  enter_country: அமெரிக்காவுக்கு வெளியே இருந்தால் உங்கள் நாட்டை உள்ளிடவும்
+  petition_thankyou: மனுவில் கையெழுத்திட்டமைக்கி நன்றி
+  learn_classes: உள்ளூர் வகுப்புகளை கண்டுபிடி
+  learn_hoc: ஒரு மணி நேரம் குறியீடை அறிய
+  beyond_hoc: ஒரு மணி நேரம் தாண்டி
+  what_gender: உங்கள் பாலினம் என்ன?
+  girl: பெண்
+  boy: ஆண்
+  contact_form_topic_press: பத்திரிக்கை/ஊடகம் (பேட்டி அல்லது ஒப்பந்தம் பேசும் போது)
+  studiobar_frozen_title: நிரல்வரி நேரம்
+  homepage_action_text_try_it: இதை முயற்சிக்கவும்
+  homepage_slot_text_title_hoc: நிரல்வரி நேரம்
+  homepage_slot_text_link_hoc: நிரல்தொடர் மணியை முயல்க
+  contact_form_topic_other: வேறு
+  contact_form_label_topic: தலைப்பு
+  contact_form_label_email: உங்கள் மின்னஞ்சல் முகவரி
+  contact_form_label_message: செய்தி
+  contact_form_label_submit: செய்தியை அனுப்பு
+  starwars_blocks_title: தொகுதிகள்
+  minecraft_agent_button: தொடங்குக
+  minecraft_designer_button: தொடங்குக
+  minecraft_adventurer_button: தொடங்குக
+  volunteer_engineer_submission_field_name: பெயர்
+  volunteer_engineer_submission_field_description: விளக்கம்
+  volunteer_engineer_submission_field_email_preference_yes: ஆம்
+  volunteer_engineer_submission_field_email_preference_no: இல்லை
+  volunteer_engineer_submission_submit: சமர்ப்பிக்க
+  volunteer_engineer_submission_experience_software_professional: மென்பொருள் பொறியாளர்
+  petition_age: வயது
+  dashboard_action_cancel: ரத்து செய்
+  dashboard_action_delete_yes: ஆம்
+  dashboard_action_delete_no: இல்லை
+  dashboard_students_name: பெயர்
+  dashboard_sequence: தொடர்வரிசை
+  dashboard_grade_other: வேறு
+  dashboard_login_none: மின்னஞ்சல்
+  dashboard_stage: மேடை
+  dashboard_puzzle: புதிர்
+  dashboard_student: மாணவர்
+  learn_more: இப்பொழுது முயற்சிக்கவும்
+  carousel_heading_international: உங்கள் மொழியிலுள்ள பயிற்சிகள்
+  blockly_name: புலோக்லி
+  course1_name: கோர்ஸ் 1
+  math_category_name: கணிதம்
+  hoc_category_name: நிரல்வரி நேரம்
+  lightbot_gradelevel: அனைத்து வயதினரும்
+  thinkersmith_gradelevel: அனைத்து வயதினரும்
+  lightbotintl_gradelevel: அனைத்து வயதினரும்
+  blockly_gradelevel: அனைத்து வயதினரும்
+  course1_gradelevel: வயது 4-6
+  coursed_gradelevel: தரம் 8+
+  coursed-2017_gradelevel: தரம் 8+
+  coursed-2018_gradelevel: தரம் 8+
+  lightbot_beyond_gradelevel: அனைத்து வயதினரும்
+  flappy_shortcode: flap
+  header_courses: பாடங்கள்
+  header_educate_hoc: நிரல்வரி நேரம்
+  user_header_label: வணக்கம் %{username}
+  user_header_settings: எனது கணக்கு
+  user_header_logout: வெளியேறு
+  user_header_signin: உள்நுழை
+  applab_tile_start_tutorial: தொடங்குக
+  hoc_overview_start_tutorial: தொடங்குக
+  hoc2018_creativity_create: உருவாக்கு
+  hoc2018_mc_start: தொடங்குக
+  hoc2018_mc_homepage_try_it: இதை முயற்சிக்கவும்
+  hoc2018_dance_party_button: தொடங்குக

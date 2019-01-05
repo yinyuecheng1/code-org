@@ -1,0 +1,17 @@
+name 'sciPD2 remember'
+title 'Thinking Back'
+css 'unplugged'
+skip_dialog true
+markdown <<MARKDOWN
+# What Can You Recall?
+
+Think back to your in-person PD experience.  What do you remember?  Which of these modules did you feel like you had the best experience with?  What was it that made that module feel special?
+
+Take a moment to head over to our discussion area to discuss these answers and more with your fellow teachers.
+
+<a href="https://teacherswithguts.org/discussions/what-do-you-recall-from-your-first-in-person-pd-experience-with-project-guts" target="blank"><button class="plc">Discuss Your Thoughts >></button></a>
+
+When you're done, come back and continue with Phase 2 Online.
+
+<a class="btn btn-large btn-primary next-stage submitButton">Continue</a>
+MARKDOWN

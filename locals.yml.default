@@ -1,0 +1,93 @@
+# Example configuration file set up with sensible defaults for local development.
+
+# Whether to prefix bundler commands with 'sudo'.
+# It may be useful to set this false when doing local development on Linux.
+#bundler_use_sudo: false
+
+
+# Causes dashboard-server to run pegasus as middleware, starting both in a
+# single command.  This is preferred (and default) in development mode.
+dashboard_enable_pegasus: true
+
+
+# Run dashboard-server with the level editing interface enabled (for admins)
+#levelbuilder_mode: true
+
+
+# Whether rake:build should rebuild the apps package
+#build_apps: true
+
+
+# Whether dashboard should use your local build of the apps package.
+# If false, dashboard will try to use a prepackaged version from S3.
+#use_my_apps: true
+
+# Allows your local server to render non-English locales, defaults to false.
+# If false, choosing a locale other than English will have no effect.
+# Note: You may need to be in an incognito window to see changes
+# due to a difference in the language cookie between production and localhost.
+#load_locales: true
+
+
+# Whether to skip the slow `rake seed:all` command during `rake build`.
+# Until you manually run `rake seed:all` or disable this flag, you won't
+# see changes to: videos, concepts, levels, scripts, trophies, prize providers,
+# callouts, hints, secret words, or secret pictures.
+#skip_seed_all: true
+
+
+# Whether to store sprocket asset cache on disk or in memory. Setting this to
+# false reduces memory usage, but significantly slows down dev server startup.
+#cache_assets_in_memory: false
+
+
+# Whether to stub schools and school_districts table with much smaller data,
+# saving a total of 4 min 30 sec during rake seed. Default: true (in development).
+#stub_school_data: false
+
+
+# The Fusion Table ID for the census map shown at code.org/yourschool.  If this
+# is set to the ID for the production site, be careful not to run
+# update_census_map as it will overwrite that table.
+#census_map_table_id: ''
+
+
+# Encryption key required for decoding certain protected level sources.
+# Ask a Code.org dev for this if you need access to protected levels.
+#properties_encryption_key: ''
+
+
+# Credentials for SauceLabs.com, used to for running selenium tests against
+# multiple browsers
+#saucelabs_username: ''
+#saucelabs_authkey: ''
+
+
+# Credentails for applitools.com, used for running automated visual tests
+#applitools_eyes_api_key: ''
+
+
+# Configuration Options for Pusher.com integration
+# Optional for most devs, very useful if working on Internet Simulator
+#use_pusher: true
+#pusher_app_id: ''
+#pusher_application_key: ''
+#pusher_application_secret: ''
+
+
+# Configuration options for Acapela-Group.com integration
+#acapela_storage_app: ''
+#acapela_storage_password: ''
+#acapela_ephemeral_app: ''
+#acapela_ephemeral_password: ''
+
+
+# Credentials for new relic logging. Used to log apps build times.
+# Log in to https://rpm.newrelic.com/accounts/501463 to get the key
+#new_relic_license_key: ''
+
+
+# Credentials for connecting to Firebase to use data blocks or data browser
+# in Applab.
+#firebase_name: 'cdo-v3-dev'
+#firebase_secret:

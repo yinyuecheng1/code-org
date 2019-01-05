@@ -1,0 +1,353 @@
+---
+ku-TR:
+  hour_of_code: كاژێری كۆدنووسی
+  hello: چۆنی جیهان
+  select_language: تکایە زمانەکەت هەڵبژێرە
+  upgrade_ie_link: زیاتر فێرببە
+  en: زانستی كۆپیتەر
+  computer_science_edweek: هەفتەی فێربوونی زانستی کۆمپیوتەر
+  csedweek_dates: لە ٨ تا ١٤ ی مانگی ١٢ ساڵی ٢٠١٢
+  csedweek_banner_hoc: '<a href="http://hourofcode.com" style="color: white; text-decoration:underline;
+    font-weight:bold">یەك کاژێری کۆد نووسی</a> نزیك بوەتەوە. , بانگەشەیەك بۆ هەموو
+    مامۆستا و رێکخەران<a href="http://hourofcode.com" style="color: white; text-decoration:underline;
+    font-weight:bold">پلانی یەك کاتژێری کۆدنووسی خۆت داڕێژە</a>'
+  csedweek_banner_teachers: |-
+    <a href="/csteacher" style="color: white; text-decoration: none; font-weight: 400">
+    ئایا تۆ مامۆستای زانستی کۆمپیوتەری؟ تکایە سەیری سەرچاوەی تری هەفتەی فێرکاری زانستی کۆمپیوتەر
+    </a>
+  n_have_learned_an_hoc: |-
+    <h1>Try an</h1>
+    <h2>كاژێری كۆدنووسی</h2>
+    <h3> # تەواوبووە </h3>
+  anybody_can_learn: هەموو کەسێک دەتوانێت فێربێت.
+  learn_now: ئێستا فێرببە
+  petition_message: هەموو قوتابیەك لە هەر قوتابخانەیەك دەبێ دەرفەتی فێربوونی زانستی
+    کۆمپیوتەری بدرێتێ
+  petition_sign_message: 'ئەگەر ڕەزامەندی، ناوت واژووبکە. بەشداربە لەگەڵ # کەسی تر.'
+  petition_sign_message_support: 'ئەگەر پاڵپشتیمان لێدەكەی، ناوت واژووبکە. بەشداربە
+    لەگەڵ # کەسی تر.'
+  name: ناو
+  email: ئیمەیڵ
+  zipcode: ژمارەی پۆستە یان وولات
+  submit: بنێرە
+  twentyhours_heading: کۆرسی پێشەکی زانستی کۆمپیوتەر تاقیکەوە
+  twentyhours_text: ئایا یەكەم كاژێری كۆدنووسیت تەواوكرد؟ پتر فێری زانستی کۆمپیوتەر
+    و بیرۆکەکانی پرۆگرامسازی بە لەگەڵ ئەم کۆرسە تەواوکاریە.
+  csedweek_og_title: هەفتەی فێربوونی زانستی کۆمپیوتەر
+  hoc2014_heading: "بەشداربە لە \n<a href=\"http://hourofcode.com\">كاژێری كۆدنووسی</a>\n<br/>لە
+    ٨ تا ١٤ ی دیسێمبەری ٢٠١٤<br/>"
+  hoc2014_students: خوێندکارەکان
+  hoc2014_try: تاقیبکەوە
+  hoc2014_teachers: مامۆستایان
+  hoc2014_host: مێوانداری بکە
+  hoc2014_everyone: هەمووکەس
+  hoc2014_support: پاڵپشتی &#x25BE بکە;
+  hoc2014_whatishoc: کاژێری كۆدنووسی چییە؟
+  cded_sign_up: خۆتۆمارکردن
+  cded_try_it: تاقیبکەوە
+  try_now: زیاتر فێرببە
+  california_heading: داوا لە قوتابخانەکەت بکە وانەی زانستی کۆمپیوتەر بڵێتەوە
+  california_text: "هەموو مامۆستایەك دەتوانی \n<a href='http://studio.code.org/'>کۆرسی
+    بەخۆڕایی</a>مان بڵێتەوە.\n هەر قوتابخانەیەکی بنەڕەتی دەتوانی \n <a href='http://code.org/educate/k5'>زانستی
+    کۆمپیوتەر فێربکا</a>. \nداوا لە خوێندنگا دواناوەندیەکان بکە\n<a href='http://code.org/educate/districts'>\nهاوکارمان
+    بن."
+  california_button: زیاتر فێرببە
+  flappy_heading: ڕۆژی لەدایك بوونی Code.org فلاپی بێ
+  flappy_text: "Code.org بووە یەك ساڵان.\n<br/><br/>\nیاری\n <b>Flappy</b>\n تایبەت
+    بەخۆت دروستبكە. \nبە ڕێسای خۆت کۆدی لۆ بکە و لە نێو برادەرانت بڵاویبکەوە!"
+  view_english_site: ماڵپەڕی ئینگلیزی ببینە
+  non_english_tutorials: 'فێركاریەكان بۆ چەند زمانێك وەرگێڕدراون:'
+  write_your_first_program: یەكەم پرۆگرامی خۆت بنوسە
+  learn_cs_concepts: "چەمکە بەراییەکانی کۆمپیوتەر زانی بە بەکارهێنانی پرۆگرامی ئاساند.
+    ئەو فێرکاریە لە شێوەی یاریدایە ڤیدوۆی وانەکان بە پالەوانیەتی بیل گێتس و مارک زوگبێرگ
+    و یاری Angry Bird و Plants vs. Zombies پێشکەش دەکرێن. \nفێرە دەستەواژەی سوڕی دووبارەکردنەوە
+    و ئەگەر-ئەوا ببە لەگەڵ هەندێك لە سەرەتاکەنی خوارزمیە."
+  all_ages: هەموو تەمەنەكان
+  beginner: شاگرد
+  n_participants: "# بەشداربوو"
+  go: بڕۆ
+  thank_you_: زۆر سوپاس!
+  congratulations: پیرۆزە!
+  congratulations_on_completing_hoc: پیرۆزە بۆ تەواوکردنی كاژێری كۆدنووسی
+  get_a_certificate_of_achievement: بڕوانامەی سەرکەوتنەکەت وەرگرەد
+  enter_valid_email: تكايە ئيمێلێكى دروست دا بنێ
+  get_a_certificate_message: ئێمە بڕوانامەو زانیاریت بۆ دەنێرین تا بتوانی <a href='/learn/beyond'>
+    زیاتر لە کاژێرێك فێرببی</a>
+  get_a_certificate_message_after: کلیك لەسەر بڕوانامەکە بکە تا دایگری یان چاپی بکەی.
+    هەر ئێستا بەردەوامبە لەگەڵ <a href='http://studio.code.org'> کۆڕسی تر</a> یان
+    سەیری بژاردەی تر بکە بۆ <a href='/learn/beyond'>فێربوون زیاتر لە کاژێرێك</a>.
+  thanks_for_submitting: سوپاس بۆ پێشكەش كردنت!
+  if_you_enjoyed: ئەگەر چێژت لە فێربووندی، داوا لەهاوەلانتبکە با ئەوانیش تاقیبکەنەوە.
+    ئێمە دەمانەوێ هەموو جیهان فێرببی.
+  personalize_certificate: دەستکاری شێوەی بڕوانامەکەت بکە
+  share_achievement: دەستکەوتەكەت بڵاوبکەوە
+  beyond_hour_message: بەردەوامبە لەگەڵمان بۆ <a href='http://studio.code.org'> کۆڕسی
+    تر</a> یان سەیری بژاردەی تر بکە بۆ <a href='/learn/beyond'>فێربوون زیاتر لە کاژێرێك</a>.
+  leaderboards_for_hoc: پێشەنگانی كاژێری كۆدنووسی.
+  support_url: http://support.code.org
+  country: ووڵات
+  city: شار
+  gender: ڕەگەز
+  boys: کوڕان
+  girls: كچان
+  give_my_hour: 'یەك کاژێرەکەم بدە بە:'
+  girls_team: تیپی کچان
+  boys_team: تیپی کوڕان
+  tell_the_world: بە هەموو جیهان ڕابگەیەنە!
+  thanks_for_voting: سوپاس بۆ دەنگدانت!
+  share_on_facebook: لە فەیسبوك بڵاویبکەوە
+  share_on_twitter: لە تویتەر بڵاویبکەوە
+  beyond_an_hour: پاش كاژێری كۆدنووسی
+  get_started: دەستپێبکە
+  i_agree: من ڕازیم
+  participant_select: "- هەڵبژێرە -"
+  participant_student: قوتابی
+  participant_parent: باوان
+  participant_educator: فێرکار
+  participant_engineer: ئەندازیاری سۆفتوێر
+  participant_other: هیچ کامیانی ئەوانەی سەرەوە
+  print_all: هەمووی چاپبکە
+  print_ice_art: هونەری بەفر چاپبکە
+  create_art_with_zombie: یان کاری هونەری پێشکەوتو لەگەڵ زۆمبی ئەنجام بدە
+  i_am_a: 'ئەمن '
+  never_spam: هەرگیز هەراسانت ناکەین
+  enter_country: ووڵاتەکەت دیاریبکە ئەگەر لەدەرەوەی ئەمریکای
+  used_infrequent_updates: تەنها بەكاردێ بۆ نوێکردنەوەی ناوبەناو
+  privacy_practices_children: سەیری بە کردارکردنمان بکە بۆ نهێنێتی مندالان
+  petition_thankyou: سوپاس بۆ واژووکردنی ئەو داوایە
+  continue_learning_header: بەردەوامبە لە فێربوونی زیاتر لە کاتژێرێك
+  continue_learning_body: زۆر بژاردەت لەبەردەستە. دەتانی لەسەر یەتەرنێت فێرببی یان
+    لە قوتابخانە یان لە کامپی هاوینە.
+  learn_next_level: بەردەوام بە بۆ ئاستی داهاتوو
+  learn_online: کۆرسی تر تاقیکەوە
+  learn_classes: پۆلی ناوەخۆ بدۆزەوە
+  just_did_hoc: 'هەرئێستا من #کاتژێری_کۆدنووسی م تەواوکرد - دەتوانی لە @codeorg سەیری
+    بکەی'
+  learn_hoc: یەك کاژێر فێرە کۆدنووسی ببە
+  beyond_hoc: پاش یەك کاتژێر
+  what_gender: کوڕیت یان کچ؟
+  girl: كچ
+  boy: كوڕ
+  help_recruit_coders: یارمەتیمان بدە تا کۆدەری زیاتر کۆ بکەینەوە لەناو تیپەکەمان!
+  help_recruit: یارمەتیمان بدە تا کۆدنوسی زیاتر کۆبکەینەوە!
+  lines_of_code: 'تا ئئەورۆ پتر لە <b> # هێڵی کۆد</b> نوسراوەتەوە.'
+  lines_of_code_alt: "<b>#</b> هێڵی کۆدە لەلایەن قوتابیانەوە نووسراوەتەوە"
+  who_has_done_hoc: 'کێ #کاتژێری_کۆدنووسی تەواوکردووە؟ @codeorg'
+  hoc_leaderboards: پێشەنگانی كاژێری كۆدنووسی
+  students_and_lines: "%{students} فێرخواز كاژێری كۆدنووسیان تەواو کردووە و %{lines}
+    هێڵی كۆدیان نووسیوەتەوە."
+  start_hoc: ئێستا دەست بە كاژێری كۆدنووسی كە
+  contact_form_topic_press: "(چاوپێكەوتن و بە قسە بەشداری کردن) ڕۆژنامە/میدیا"
+  stats_nina: '"هەموو ڕۆژ هەمان ئەنجام بەدەستهات&mdash; ١٠٠% بەشداریکردن" - نینا نیکۆلس
+    پیری. مامۆستا'
+  stats_student: '"من زانیم کە ئەو دەرفەتە <b>جارێکە لە ژیان</b>." - ماریانا ئەلزاتی،
+    پۆلی پێنج'
+  stats_michael: '"ئەمن <b>قەت و هیچ</b> قوتابیەکانم ئەوەندە پەرۆش نەدیتیە بۆ فێربوون."
+    - مایكل کلارك، مامۆستا'
+  studiobar_title: لەناو كۆد<a href='http://studio.code.org'>كۆد ستۆدیۆدا</a> بگەڕێ
+  studiobar_title_nolink: ستۆدیۆی کۆدنووسی بناسە
+  studiobar_elementary_title: کۆڕسی بنەڕەتی
+  studiobar_elementary_body: سێ كۆرسە نوێیەكەمان بۆ K&#8209;5
+  studiobar_hoc_title: كاژێری كۆدنووسی
+  studiobar_hoc_body: فێرە کۆدنوسی بە لەگەڵ باڵندە توڕەکان
+  studiobar_flappy_body: یاری Flappy خۆت دروست بکە و بڵاوی بکەوە
+  studiobar_teacher_title: دروستکراوە بۆ مامۆستایان
+  studiobar_teacher_body: كۆد ستۆدیۆ بە پۆلی خۆت بناسێنە
+  studiobar_frozen_title: كاژێری كۆدنووسی
+  studiobar_frozen_body: ووڵاتی سەیروسەمەرە ی زستانە دروست بكە لەگەڵ ئانا و ئێلسا
+  studiobar_donate_title: بەخشینێک بکە
+  studiobar_donate_body: قوتابییەک فێردەبێت لەگەڵ هەر دۆلارێک کە تۆ دەیبەخشیت
+  studiobar_shop_title: کڕین
+  studiobar_shop_body: کڵیشه بشکێنە و هێمایەکەمان بە سەربەرزیەوە هەڵگرە.
+  homepage_hero_text_malala: "&ldquo; داوا لە كچانی هەموو  ووڵاتان دەکەم یەك كاژێر
+    كۆدنووسی فێرببن &rdquo; مەلالا، براوەی خەڵاتی نۆبڵی ئاشتی"
+  homepage_hero_text_susan: "&ldquo; ئەگەر بتوانی تەكنەلۆجیا بگۆڕی ئەوا دەتوانی جیهان
+    بگۆڕی.&rdquo; سوزان، بەڕێوەبەری یوتیوب"
+  homepage_hero_text_fistbump: "&ldquo;تەنها یاری لەسەر مۆبایلەكەت مەکە، پرۆگرامی
+    بكە.&rdquo; باڕاك ئۆباما، سەرۆكی ولایەتە یەکگرتوەکانی ئەمریکا"
+  homepage_hero_text_sheryl: |-
+    &ldquo;منداڵەکانمان &mdash;بەكچەكانمانەوە&mdash; پێویستیان بە دەرفەتی فێربوونی زانستی کۆمپیوتەر هەیە.&rdquo;
+    شێریل، گەورە فەرمانبەری بەکاربردن لە فەیسبووك
+  homepage_hero_text_satya: "&ldquo;زانستی کۆمپیوتەر دەتوانی باشترین دەرفەتەکانی جیهان
+    بكاتەوە.&rdquo; ساتیا، بەڕێوەبەری مایكرۆسۆفت"
+  homepage_hero_text_bosh: "&ldquo; ئەگەت کۆدی پرۆگرام  بنوسی، دەتوانی ڕێگای ژیانت
+    هەڵبژێری.&rdquo; کریس بۆش"
+  homepage_hero_text_student1: "&ldquo; ئەو بەهرانە داهاتوومیان گۆڕی، وە لەیاديش نەکەین،
+    كە هەر خۆشیەکی بێ گەردە. &rdquo; \nلونا، پۆلی حەفت"
+  homepage_hero_text_student2: "&ldquo; من هەرگیز منداڵەکانی خۆم نەدیتییە  ئەوەندە
+    بەپەرۆشی فێربوون بن. &rdquo; \nمایكل، مامۆستا"
+  homepage_hero_text_student3: |-
+    &ldquo;زانستی کۆمپیوتەر ئەو بوارەیە کە نازانی ڕات لێ یە یان نا تا بەخۆت تاقی نەکەیەوە. &rdquo;
+    جاکسۆن، پۆلی شەشی سەرەتایی
+  homepage_hero_text_student4: "&ldquo; هەر شتێك مێشكت بیەوێت دەتانی بە به‌رنامه‌
+    بی ‌هێنییە  جێ.&rdquo; \nمایا، پۆلی دوو"
+  homepage_hero_text_student5: |-
+    &ldquo;زانستی کۆمپیوتەر لۆ خەلکی تر نییە. هەر ئێستا لۆ تۆیە. &rdquo;
+    گیرالدۆ، مامۆستا
+  homepage_hero_text_teacher1: |-
+    &ldquo; کۆد نووسین پڕيشك و هاندەرە بۆ داهێنان و نوێکاری&mdash; کە هەموویان زۆر گرینگن بۆ هەر پیشەیەك.&rdquo;
+    فلۆریسا، مامۆستا
+  homepage_hero_text_teacher2: "&ldquo; ئەو پرۆگرامە وای لە قوتابیانم کرد ١٠٠% بەشداربن.&rdquo;
+    \nئادەم، مامۆستا"
+  homepage_slot_text_hoc: كاژێری كۆدنووسی
+  homepage_slot_text_frozen: کارتۆنی فرۆزن لەگەڵ ئانا و ئێلسا
+  homepage_slot_text_studio: هەموو فێرکاریەکانمان
+  homepage_slot_text_shop: کڕین
+  homepage_action_text_num_served: "# خزمەت کراوە"
+  homepage_action_text_sign_up: خۆتۆمارکردن
+  homepage_action_text_try_it: تاقیبکەوە
+  homepage_action_text_codevideo: ڤیدیۆکە ببینە
+  homepage_action_text_teachervideo: ڤیدیۆکە ببینە
+  homepage_action_text_watchvideo: ڤیدیۆکە ببینە
+  homepage_action_text_learn: فێربوون دەستپێبکە
+  homepage_action_text_signpetition: داواکە واژووبکە
+  homepage_signpetition_dropdown: داواکەمان واژوو بکە &#x25BE;
+  homepage_banner_text_link: زیاتر فێرببە
+  homepage_banner_privacy_link: زیاتر فێرببە
+  homepage_banner_20k_teachers_link: زیاتر فێرببە
+  homepage_banner_40k_teachers_link: زیاتر فێرببە
+  homepage_slot_text_title_hoc: كاژێری كۆدنووسی
+  homepage_slot_text_blurb_hoc: هەموو کەسێک دەتوانێت فێربێت. ئەمڕۆ دەستپێبکە
+  homepage_slot_text_link_host: خانەخوێی كاژێرێکی كۆدنووسی بە
+  homepage_slot_text_link_hocserved: "# خزمەت کراوە"
+  homepage_slot_text_title_students: خوێندکارەکان
+  homepage_slot_text_blurb_students: لە نێو هەموو وانەکانمان بگەڕێ
+  homepage_slot_text_link_codestudio: کۆد ستۆدیۆ تاقیکەوە
+  homepage_slot_text_link_local: پۆلێكی نزیك بدۆزەوە
+  homepage_slot_text_link_othercourses: کۆرسی تری سەر ئینتەرنێت
+  homepage_slot_text_title_educators: فێرکارەکان
+  homepage_slot_text_blurb_educators: قوتابییەکانت فێرکە
+  homepage_slot_text_link_middle: قوتابخانەی ناوەندی
+  homepage_slot_text_link_high: قوتابخانەی دواناوەندی
+  homepage_slot_text_link_k5: وانە بۆ پۆلەکانی سەرەتایی
+  homepage_slot_text_link_fullcurriculum: هەموو بابەتەکانی وانەکە سەیرکە
+  homepage_slot_text_link_pd: پەرەسەندنى پيشەگەر
+  homepage_slot_text_title_advocates: بانگەوازان
+  homepage_slot_text_blurb_advocates: پاڵپشتی کارەکانمان بکە
+  homepage_slot_text_link_stats: سەیری ئامارەکان بکە
+  homepage_slot_text_link_buy: بەشداری بکە
+  homepage_slot_text_link_donate: بەخشینێک بکە
+  homepage_header_codestudio: داهێنانی قوتابیانی كۆد ستۆدیۆ
+  homepage_header_donors: Code.org سوپاسی هاوکارانی دەکات
+  homepage_donors_seall: هەمووی ببینە
+  homepage_donors_donate: بەخشینێک بکە
+  homepage_below_hero_announcement_link_text: زیاتر فێرببە
+  contact_form_topic_student: من قوتابیم
+  contact_form_topic_parent: من باوانم
+  contact_form_topic_teacher: من مامۆستام/فێركارم
+  contact_form_topic_outside_us: ئەمن لە دەرەوەی ولایەتە یەکگرتوەکانی ئەمەریكام
+  contact_form_topic_contribution: بەشداریەکی چاكەكار
+  contact_form_topic_partner: دەمەوێ هاوکارتان بم
+  contact_form_topic_other: هی تر
+  contact_form_label_topic: بابەت
+  contact_form_label_email: ئیمێڵەکەت
+  contact_form_label_message: نامە
+  contact_form_label_submit: نامە بنێرە
+  class_submission_in_school: لە قوتابخانە
+  class_submission_in_school_daily_programming_course: کۆرسی ڕۆژانەی پرۆگرامینگ
+  class_submission_in_school_ap_computer_science: AP زانستی کۆمپیوتەر
+  class_submission_in_school_full_university_cs_curriculum: بابەتی تەواوی کۆمپیوتەرزانی
+    بۆ زانکۆ
+  class_submission_in_school_robotics_club: یانەی ڕۆبۆتیك
+  class_submission_in_school_programming_integrated_in_other_classes: پرۆگرامسازی
+    لەگەڵ وانەی تر تێك ئاخنایە (بیرکاری، زانست، هتد.)
+  class_submission_in_school_summer_school_cs_program: پرۆگرامی قوتابخانەی هاوینەی
+    زانستی كۆمپیوتەر
+  class_submission_out_of_school_other: هی تری دەرەوەی قوتابخانە
+  class_submission_online_teacher_resource: سەرچاوەی سەرهێڵی مامۆستا
+  class_submission_level_elementary: سەرەتایی
+  class_submission_level_middle_school: قوتابخانەی ناوەندی
+  class_submission_level_high_school: قوتابخانەی دواناوەندی
+  class_submission_level_college: کۆلێژ
+  minecraft_agent_button: دەستپێبکە
+  minecraft_designer_button: دەستپێبکە
+  minecraft_adventurer_button: دەستپێبکە
+  sports_watch_video: ڤیدیۆکە ببینە
+  are_you_teacher: ئایا تۆ مامۆستای؟
+  volunteer_engineer_submission_field_name: ناو
+  volunteer_engineer_submission_field_description: باسکردن
+  volunteer_engineer_submission_field_email: ناونیشانی ئیمەیڵ
+  volunteer_engineer_submission_field_email_placeholder: ناونیشانی ئیمەیڵ
+  volunteer_engineer_submission_submit: بنێرە
+  volunteer_engineer_submission_experience_university_student_or_researcher: خوێندکاری
+    زانکۆ (یان توێژەر)
+  volunteer_engineer_submission_experience_software_professional: ئەندازیاری سۆفتوێر
+  petition_age: تەمەن
+  dashboard_announce_learn_more_button: زیاتر فێرببە
+  dashboard_landing_title: پەڕەی سەرەکی مامۆستا
+  dashboard_landing_watch_video: بۆ گەشتێک بەناو تایبەتمەندییە نوێکان!
+  dashboard_landing_view_as_student: ئەم ماڵپەڕە وەک قوتابی ببینە
+  dashboard_landing_students_title: قوتابییەکانت
+  dashboard_landing_students_manage: بینین و بەڕێوەبردنی قوتابییەکانت
+  dashboard_action_delete: بسڕەوە
+  dashboard_action_confirm: بسڕێتەوە؟
+  dashboard_action_done: تەواو
+  dashboard_navigation_home_page: پەڕەی سەرەکی مامۆستا
+  dashboard_navigation_section_community: یارمەتی و کۆمەڵگا
+  dashboard_navigation_add_students: زیادکردنی قوتابییەکان
+  dashboard_navigation_manage_students: بەڕێوەبردنی قوتابییەکان
+  dashboard_navigation_student: 'قوتابی: %{student_name}'
+  dashboard_sections_table_students: خوێندکارەکان
+  dashboard_students_name: ناو
+  dashboard_students_male: نێر
+  dashboard_students_female: مێ
+  dashboard_grade_other: هی تر
+  dashboard_login_none: ئیمەیڵ
+  dashboard_stage: قۆناغ
+  dashboard_teacher: مامۆستا
+  dashboard_student: قوتابی
+  dashboard_sections_sign_in_main: http://code.org  و کرتەی "چوونەژوورەوە" بکە
+  learn_more: زیاتر فێرببە
+  learn_sign_up_button: خۆتۆمارکردن
+  carousel_heading_webpages: دروستکردنی پەڕەی تۆڕ فێربە
+  carousel_heading_robots: بەرنامەسازی ڕۆبۆت فێربە
+  teachers_notes: تێبینییەکانی مامۆستا
+  blockly_name: بلۆکلی
+  course1_name: Ders 1
+  math_category_name: بیرکاری
+  hoc_category_name: كاژێری كۆدنووسی
+  lightbot_gradelevel: هەموو تەمەنەكان
+  thinkersmith_gradelevel: هەموو تەمەنەكان
+  lightbotintl_gradelevel: هەموو تەمەنەكان
+  codehs_gradelevel: قوتابخانەی دواناوەندی
+  codecademy_gradelevel: قوتابخانەی دواناوەندی
+  processing_gradelevel: قوتابخانەی دواناوەندی
+  codespark_gradelevel: سەرەتایی
+  kodable_gradelevel: سەرەتایی
+  bitsbox_gradelevel: سەرەتایی
+  makeschool_gradelevel: قوتابخانەی دواناوەندی
+  touchdevelop_gradelevel: قوتابخانەی دواناوەندی
+  blockly_gradelevel: هەموو تەمەنەكان
+  boxisland_gradelevel: سەرەتایی
+  course1_gradelevel: تەمەنی ٤-٦
+  codeorg_shortdescription: فێری کۆد نووسین بە لەگەڵ Mark Zuckerberg و Angry Birds!
+  codeintl_shortdescription: فێری کۆد نووسین بە لەگەڵ Mark Zuckerberg و Angry Birds!
+  hourofcode_shortdescription: فێری کۆد نووسین بە لەگەڵ Mark Zuckerberg و Angry Birds!
+  groklearning_beyond_name: بەرنامەسازی پایثۆن فێربە
+  lightbot_beyond_gradelevel: هەموو تەمەنەكان
+  codecademy_beyond_gradelevel: قوتابخانەی دواناوەندی
+  kodable_beyond_gradelevel: سەرەتایی
+  scratchjr_beyond_gradelevel: سەرەتایی
+  hacketyhack_beyond_gradelevel: قوتابخانەی دواناوەندی
+  makeschool_beyond_gradelevel: قوتابخانەی دواناوەندی
+  touchdevelop_beyond_gradelevel: قوتابخانەی دواناوەندی
+  codehs_beyond_gradelevel: قوتابخانەی دواناوەندی
+  processing_beyond_gradelevel: قوتابخانەی دواناوەندی
+  codeorg_beyond_shortdescription: فێری کۆد نووسین بە لەگەڵ Mark Zuckerberg و Angry
+    Birds!
+  coursera_beyond_shortdescription: لەگەڵ CS101 دەستپێبکە
+  udacity_beyond_shortdescription: لەگەڵ CS101 دەستپێبکە
+  teachingtree_beyond_shortdescription: 'زانیاری سەر ئینتەرنێت: خێرایە و بێ سنوورە'
+  kodu_beyond_shortdescription: جیهانی سێ ڕەهەندی بۆ یاری دابڕێژە
+  flappy_shortcode: بازدان
+  header_educate_hoc: كاژێری كۆدنووسی
+  user_header_settings: هەژمارەکەم
+  user_header_logout: دەرچوون
+  user_header_signin: چوونەژوورەوە
+  applab_tile_start_tutorial: دەستپێبکە
+  hoc_overview_start_tutorial: دەستپێبکە
+  hoc2018_creativity_create: ez
+  hoc2018_mc_start: دەستپێبکە
+  hoc2018_mc_homepage_try_it: تاقیبکەوە
+  hoc2018_dance_party_button: دەستپێبکە
+  hoc2018_dance_amazon_about_future_engineer_button: زیاتر فێرببە

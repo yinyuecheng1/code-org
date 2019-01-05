@@ -1,0 +1,69 @@
+-#
+  This is a view for rendering a summary of all of the levels/instructions in a given
+  script, that should only be visible in levelbuilder mode
+:scss
+  .instructions_summary {
+    h1 {
+      margin-top: 30px
+    }
+    .script_level {
+      border: 1px dashed black;
+      padding: 10px;
+    }
+    .teacher_markdown {
+      border: 5px solid #0094ca;
+      border-radius: 5px;
+      background: #d9eff7;
+
+      > h3 {
+        background: #0094ca;
+        color: white;
+        font-family: "Gotham 7r", sans-serif;
+        font-size: 18;
+        padding: 5px;
+        margin: 0px;
+      }
+      .content {
+        padding: 10px;
+      }
+    }
+  }
+
+- stages = local_assigns[:stages]
+.instructions_summary
+  - stages.each_with_index do |stage, index|
+    %h1= stage.localized_title
+    - stage.script_levels.each do |script_level|
+      - level = script_level.level
+      .script_level
+        = link_to "Level #{script_level.position}: #{script_level.level.name}", build_script_level_path(script_level)
+        %div= "type: #{script_level.level.class}"
+        - levels = level.is_a?(LevelGroup) ? level.levels : [level]
+        - levels.each do |level|
+          - if level.try(:contained_levels).present?
+            - level.try(:contained_levels).each do |contained|
+              %span Contained Level:
+              = link_to "#{contained.name} ", level_path(contained)
+          - if level.is_a?(External)
+            =render partial: 'levels/content', locals: {app: 'external', data: level.properties}
+          - if level.properties['title']
+            %div= "Title: #{level.properties['title']}"
+          - if level.properties['code_functions']
+            %div Blocks:
+            %ul
+              - level.properties['code_functions'].each do |key, code_function|
+                %li= key
+          - if level.properties['long_instructions']
+            - markdown = level.properties['long_instructions']
+            =ActionView::Base.new.render(inline: markdown, type: :md) unless markdown.blank?
+          - if level.properties['teacher_markdown']
+            .teacher_markdown
+              %h3 For Teachers Only
+              .content
+                - markdown = level.properties['teacher_markdown']
+                =ActionView::Base.new.render(inline: markdown, type: :md) unless markdown.blank?
+          - if level.properties['questions']
+            %div= "Questions: #{level.properties['questions']}"
+          - if level.properties['answers']
+            %div= "Answers: #{level.properties['answers']}"
+          %br

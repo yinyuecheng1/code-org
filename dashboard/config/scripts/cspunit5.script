@@ -1,0 +1,14 @@
+login_required true
+has_lesson_plan true
+
+stage 'Explore PT Prep'
+level 'U5 - Explore PT Prep - Student Introduction'
+
+stage 'Explore PT'
+level 'U5 - Explore PT - Student Introduction'
+
+stage 'Create PT Prep'
+level 'U5 - Create PT Prep - Student Introduction'
+
+stage 'Create PT'
+level 'U5 - Create PT - Student Introduction'

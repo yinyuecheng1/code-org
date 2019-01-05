@@ -1,0 +1,158 @@
+%script{src: "/js/raphael.js"}
+%script{src: "/js/extended_us_map.js"}
+
+- require 'state_abbr'
+
+- advocacy_variation ||= false
+- fill_color = advocacy_variation ? '#0094a3' : '#3E484F'
+- stroke_color = advocacy_variation ? 'white' : '#7A7A7A'
+- hover_color = advocacy_variation ? '#59cad3' : '#59cad3'
+- click_color = advocacy_variation ? '#ffa400' : '#0094a3'
+
+#state-list.phone-feature
+  - if advocacy_variation
+    %h2 See what’s happening in your state
+  - else
+    %h2 Choose a State
+
+  %form
+    %select.dropdown#state-dropdown
+      %option
+      -STATE_ABBR_WITH_DC_HASH.each do |abbr, state|
+        %option{value:abbr}= state
+
+- if advocacy_variation
+  %h2.tablet-feature See what’s happening in your state
+- else
+  %h2.tablet-feature Choose a State
+
+#map.tablet-feature
+#infobox.greybox.col-33
+  %p.info
+    Computer science drives innovation throughout the US economy, but it remains marginalized throughout K-12 education.
+
+  %strong= hs_access_count
+  states have adopted a policy to give all high school students access to CS courses (and of those, only
+  = k12_access_count
+  states give all K-12 students access)
+
+  %strong= format_integer_with_commas(jobs_nationwide)
+  Open computing jobs nationwide
+
+  %strong
+    = format_integer_with_commas(grads_nationwide)
+  Computer science students graduated into the workforce last year
+
+  .summary-button
+    %a{href: 'https://docs.google.com/document/d/1J3TbEQt3SmIWuha7ooBPvlWpiK-pNVIV5uuQEzNzdkE/edit?usp=sharing', target: '_blank'}
+      %button
+        See a summary of state efforts
+  %p#sources
+    %span
+      Sources:
+    %a{href: "http://www.conference-board.org/", style: "color: #BCC2C6", target: '_blank'} The Conference Board
+    and
+    =succeed "." do
+      %a{href: "http://nces.ed.gov/", style: "color: #BCC2C6", target: '_blank'} National Center for Education Statistics
+    =succeed "." do
+      %a{href: "https://docs.google.com/document/d/1gySkItxiJn_vwb8HIIKNXqen184mRtzDX12cux0ZgZk/pub", style: "color: #BCC2C6", target: '_blank'} More info
+
+:javascript
+  var webServiceLocation = '/promote/state/';
+
+  $(document).ready(function() {
+    if (#{use_url}) {
+      // Check if the URL specifies a specific state. If so, load the state
+      if (window.location.pathname.replace("/promote", "") !== "") {
+        var state = window.location.pathname.replace("/promote/", "");
+        $.ajax({
+          url: webServiceLocation + state.toLowerCase(),
+          type: "get",
+        }).done(function(data) {
+          $("#infobox").html(data);
+        }).fail(function () {
+          if (window.history.replaceState) {
+            history.replaceState({}, "", "../promote");
+          }
+        });
+      }
+    }
+
+    $("#state-dropdown").change(
+        function(){
+
+          var abbr = $('#state-dropdown option:selected').val();
+          console.log(abbr)
+          if (abbr != '') {          // Load the selected state's information into the infobox
+            $.ajax({
+              url: webServiceLocation + abbr.toLowerCase(),
+              type: "get",
+            }).done(function(data) {
+              $("#infobox").html(data);
+            }).fail(function () {
+              if (#{use_url}) {
+                window.location = "/promote"
+              }
+            });
+          }
+        }
+      )
+
+    // Load the SVG into the #map div
+    $('#map').usmap({
+      click: function(event, data) {
+        if (#{use_url}) {
+          // Add data and URL to browser history when the user clicks a state
+          if (window.history.replaceState) {
+            if (window.history.replaceState) {
+              history.replaceState({state: data.name}, data.name, "../promote/" + data.name.toLowerCase());
+            }
+          }
+        }
+
+        // Load the clicked state's information into the infobox
+        $.ajax({
+          url: webServiceLocation + data.name.toLowerCase(),
+          type: "get",
+        }).done(function(data) {
+          $("#infobox").html(data);
+        }).fail(function () {
+          if (#{use_url}) {
+            window.location = "/promote"
+          }
+        });
+      },
+
+      // Map styling
+      stateHoverAnimation: 0,
+      stateStyles: {fill: "#{fill_color}", stroke: "#{stroke_color}"},
+      labelBackingStyles: {fill: "#{fill_color}", stroke: "#{stroke_color}"},
+      labelBackingHoverStyles: {fill: "#{hover_color}"},
+      stateHoverStyles: {fill: "#{hover_color}"},
+      stateClickStyles: {fill: "#{click_color}", persistent: false}
+    });
+
+    // "Click" the current state if page is loaded with state in URL.
+    if (#{use_url}) {
+      if (window.location.pathname.replace("/promote", "") !== "") {
+        $("#" + state.toUpperCase()).click();
+      }
+    }
+  });
+
+  // When the user uses the "back" button, load previous data into infobox and URL bar
+  window.onpopstate = function(event) {
+    if (#{use_url}) {
+      $.ajax({
+        url: webServiceLocation + event.state["state"].toLowerCase(),
+        type: "get",
+      }).done(function(data) {
+        $("#infobox").html(data);
+        $("#" + event.state["state"]).click();
+      }).fail(function () {
+        if (window.history.replaceState) {
+          history.replaceState({}, "", "../promote");
+        }
+      });
+    }
+  };

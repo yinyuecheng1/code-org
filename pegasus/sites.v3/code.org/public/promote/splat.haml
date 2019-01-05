@@ -1,0 +1,78 @@
+---
+title: Promote Computer Science
+social:
+  "og:description": "What’s wrong with this picture? Share these stats."
+  "og:image": "http://code.org/images/cs-stats/Slide1_Schools_Teach.png"
+  "og:image:width": 1771
+  "og:image:height": 1048
+  "og:video": ""
+  "og:video:width": ""
+  "og:video:height": ""
+  "og:video:type": ""
+video_player: true
+theme: responsive
+---
+-state = File.basename(request.path_info)
+-facebook = {:u=>'https://code.org/promote' + (state != "thanks" ? "/" + state : "")}
+-twitter = {:url=>"https://code.org/promote", :related=>'codeorg', :text=>"Most schools don't teach computer science. To help, sign the petition. (Thanks #{get_random_donor_twitter} for supporting @codeorg)"}
+
+%script{:src=>"/js/jquery.placeholder.js"}
+%link{:href=>"/css/promote.css", :rel=>"stylesheet"}
+%link{:href=>"/css/interactive-map.css", :rel=>"stylesheet"}
+
+#promote-page
+  %h1 Promote Computer Science
+
+  .col-80.clear{:id=>'thank-you-box'}
+    %p{:id=>'thank-you-message'}
+      Thank you for filling out our petition. Please help us spread the word.
+      = view :share_buttons, facebook:facebook, twitter:twitter
+
+  %div{:id=>'us_content'}
+    - if state != "thanks"
+      #interactive-map.section.clear
+        = view :interactive_map, use_url: true
+
+    #stats-section.section.clear.desktop-feature
+      %h2 What’s wrong with this picture? Share these stats.
+      = view :stats_carousel
+
+    #stats-section-mobile.section.clear.mobile-feature
+      %h2 Computer Science Education Stats
+      = view :stats_mobile
+
+    #petition-section.section.clear
+      = view :petition
+
+    #tools-section.section.clear
+      %h2 Tools to help you advocate locally
+      = view :promote_tools, state:nil, section_name: 'local_tools'
+
+    #resources-section.section.clear
+      %h2 Policy development resources
+      = view :promote_tools, state:nil, section_name: 'policy_resources'
+
+  - if state == "thanks"
+    #interactive-map.section.clear
+      = view :interactive_map, use_url: true
+
+  %div{:id=>'universal_content'}
+    #youtube-section.section.clear
+      %h2 Tell the world! Share the Code.org video.
+      = view :youtube_videos
+
+    #quotes-section.section.clear
+      %h2 Leaders and trendsetters agree more students should learn computer science
+      = view :top_quotes
+
+= view 'popup_window.js'
+
+:javascript
+  var petition;
+  $(document).ready(function() {
+    petition = new Petition();
+    if (document.referrer.indexOf(location.host) !== -1) {
+      $("#thank-you-box").show();
+      $("#petition-section").hide();
+    }
+  });

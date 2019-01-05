@@ -1,0 +1,14 @@
+- content_for(:head) do
+  = stylesheet_link_tag 'css/pd', media: 'all'
+
+#thanks
+  %h1 Thank you for submitting your application!
+
+  %p
+    Your application will be reviewed soon. In the meantime, please visit
+    = link_to 'https://code.org/yourschool', 'https://code.org/yourschool'
+    and tell us more about what computer science opportunities are available at your school.
+    Or, visit
+    = link_to 'https://code.org/educate', 'https://code.org/educate'
+    for additional resources and opportunities to connect with other computer science educators.
+    Thank you for supporting computer science for all!

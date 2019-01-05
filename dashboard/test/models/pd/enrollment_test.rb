@@ -1,0 +1,541 @@
+require 'test_helper'
+
+class Pd::EnrollmentTest < ActiveSupport::TestCase
+  test 'code' do
+    enrollment1 = create :pd_enrollment
+    enrollment2 = create :pd_enrollment
+
+    refute_nil enrollment1.code
+    refute_nil enrollment2.code
+    refute_equal enrollment1.code, enrollment2.code
+  end
+
+  test 'enrollment.for_user' do
+    user = create :teacher
+    enrollment1 = create :pd_enrollment, user_id: nil, email: user.email
+    enrollment2 = create :pd_enrollment, user_id: user.id, email: 'someoneelse@example.com'
+
+    enrollments = Pd::Enrollment.for_user(user).to_a
+    assert_equal Set.new([enrollment1, enrollment2]), Set.new(enrollments)
+  end
+
+  test 'find by code' do
+    enrollment = create :pd_enrollment
+
+    found_enrollment = Pd::Enrollment.find_by(code: enrollment.code)
+    assert_equal enrollment, found_enrollment
+  end
+
+  test 'resolve_user' do
+    teacher1 = create :teacher
+    teacher2 = create :teacher
+    enrollment_with_email = build :pd_enrollment, email: teacher1.email
+    enrollment_with_user = build :pd_enrollment, user: teacher2
+    enrollment_with_no_user = build :pd_enrollment
+
+    assert_nil enrollment_with_email.user
+    assert_equal teacher1, enrollment_with_email.resolve_user
+
+    assert_equal teacher2, enrollment_with_user.user
+    assert_equal teacher2, enrollment_with_user.resolve_user
+
+    assert_nil enrollment_with_no_user.user
+    assert_nil enrollment_with_no_user.resolve_user
+  end
+
+  test 'autoupdate_user_field called on validation' do
+    teacher = create :teacher
+    enrollment = build :pd_enrollment, email: teacher.email
+
+    enrollment.valid?
+
+    assert_equal teacher, enrollment.user
+  end
+
+  test 'required field validations with country' do
+    enrollment = Pd::Enrollment.new
+    enrollment.first_name = 'FirstName'
+    enrollment.last_name = 'LastName'
+    enrollment.email = 'teacher@example.net'
+    enrollment.school_info = build :school_info
+    assert enrollment.valid?
+  end
+
+  test 'emails are stored in lowercase and stripped' do
+    enrollment = build :pd_enrollment, email: ' MixedCase@Example.net '
+    assert_equal 'mixedcase@example.net', enrollment.email
+
+    # Also accepts nil
+    enrollment.email = nil
+    assert_nil enrollment.email
+  end
+
+  test 'soft delete' do
+    enrollment = create :pd_enrollment
+    enrollment.destroy!
+
+    assert enrollment.reload.deleted?
+    refute Pd::Enrollment.exists? enrollment.id
+    assert Pd::Enrollment.with_deleted.exists? enrollment.id
+  end
+
+  test 'for_school_district' do
+    school_info = create :school_info
+    enrollment_in_district = create :pd_enrollment, school_info: school_info
+    _enrollment_out_of_district = create :pd_enrollment
+
+    assert_equal [enrollment_in_district], Pd::Enrollment.for_school_district(school_info.school_district)
+  end
+
+  test 'exit_survey_url' do
+    csf_workshop = create :pd_ended_workshop, course: Pd::Workshop::COURSE_CSF
+    csf_enrollment = create :pd_enrollment, workshop: csf_workshop
+
+    csp_workshop = create :pd_ended_workshop, course: Pd::Workshop::COURSE_CSP
+    csp_enrollment = create :pd_enrollment, workshop: csp_workshop
+
+    counselor_workshop = create :pd_ended_workshop, course: Pd::Workshop::COURSE_COUNSELOR
+    counselor_enrollment = create :pd_enrollment, workshop: counselor_workshop
+
+    admin_workshop = create :pd_ended_workshop, course: Pd::Workshop::COURSE_ADMIN
+    admin_enrollment = create :pd_enrollment, workshop: admin_workshop
+
+    local_summer_workshop = create :pd_ended_workshop, course: Pd::Workshop::COURSE_CSP, subject: Pd::Workshop::SUBJECT_SUMMER_WORKSHOP
+    local_summer_enrollment = create :pd_enrollment, workshop: local_summer_workshop
+
+    teachercon_workshop = create :pd_ended_workshop, course: Pd::Workshop::COURSE_CSP, subject: Pd::Workshop::SUBJECT_TEACHER_CON
+    teachercon_enrollment = create :pd_enrollment, workshop: teachercon_workshop
+
+    code_org_url = ->(path) {CDO.code_org_url(path, CDO.default_scheme)}
+    assert_equal code_org_url["/pd-workshop-survey/#{csf_enrollment.code}"], csf_enrollment.exit_survey_url
+    assert_equal code_org_url["/pd-workshop-survey/counselor-admin/#{counselor_enrollment.code}"], counselor_enrollment.exit_survey_url
+    assert_equal code_org_url["/pd-workshop-survey/counselor-admin/#{admin_enrollment.code}"], admin_enrollment.exit_survey_url
+
+    studio_url = ->(path) {CDO.studio_url(path, CDO.default_scheme)}
+    assert_equal studio_url["/pd/workshop_survey/post/#{local_summer_enrollment.code}"], local_summer_enrollment.exit_survey_url
+    assert_equal studio_url["/pd/workshop_survey/post/#{teachercon_enrollment.code}"], teachercon_enrollment.exit_survey_url
+    assert_equal studio_url["/pd/workshop_survey/post/#{csp_enrollment.code}"], csp_enrollment.exit_survey_url
+  end
+
+  test 'should_send_exit_survey' do
+    normal_workshop = create :pd_ended_workshop
+    normal_enrollment = create :pd_enrollment, workshop: normal_workshop
+
+    assert normal_enrollment.should_send_exit_survey?
+
+    fit_workshop = create :pd_ended_workshop, course: Pd::Workshop::COURSE_CSD, subject: Pd::Workshop::SUBJECT_CSD_FIT
+    fit_enrollment = create :pd_enrollment, user: create(:teacher), workshop: fit_workshop
+
+    refute fit_enrollment.should_send_exit_survey?
+
+    csf_201_workshop = create :pd_ended_workshop, course: Pd::Workshop::COURSE_CSF, subject: Pd::Workshop::SUBJECT_CSF_201
+    csf_201_enrollment = create :pd_enrollment, user: create(:teacher), workshop: csf_201_workshop
+
+    refute csf_201_enrollment.should_send_exit_survey?
+  end
+
+  test 'send_exit_survey does not send mail when the survey was already sent' do
+    enrollment = create :pd_enrollment, user: create(:teacher), survey_sent_at: Time.now
+    Pd::WorkshopMailer.expects(:exit_survey).never
+
+    enrollment.send_exit_survey
+  end
+
+  test 'send_exit_survey does not send mail for FIT Weekend workshops' do
+    workshop = create :pd_ended_workshop, course: Pd::Workshop::COURSE_CSD, subject: Pd::Workshop::SUBJECT_CSD_FIT
+    enrollment = create :pd_enrollment, user: create(:teacher), workshop: workshop
+    Pd::WorkshopMailer.expects(:exit_survey).never
+
+    enrollment.send_exit_survey
+  end
+
+  test 'send_exit_survey sends email and updates survey_sent_at' do
+    enrollment = create :pd_enrollment, user: create(:teacher)
+
+    mock_mail = stub(deliver_now: nil)
+    Pd::WorkshopMailer.expects(:exit_survey).once.returns(mock_mail)
+
+    enrollment.send_exit_survey
+    assert_not_nil enrollment.reload.survey_sent_at
+  end
+
+  test 'name is deprecated and calls through to full_name' do
+    enrollment = create :pd_enrollment
+    enrollment.expects(:full_name)
+    assert_deprecated 'name is deprecated. Use first_name & last_name instead.' do
+      enrollment.name
+    end
+
+    enrollment.expects('full_name=' => 'First Last')
+    assert_deprecated 'name is deprecated. Use first_name & last_name instead.' do
+      enrollment.name = 'First Last'
+    end
+  end
+
+  test 'school info is required on new enrollments, create and update' do
+    e = assert_raises ActiveRecord::RecordInvalid do
+      create :pd_enrollment, school_info: nil
+    end
+    assert e.message.include? 'Validation failed: School info is required'
+
+    enrollment = create :pd_enrollment
+    refute enrollment.update(school_info: nil)
+  end
+
+  test 'old enrollments with no last name are still valid' do
+    old_enrollment = create :pd_enrollment
+    old_enrollment.update!(created_at: '2016-11-09', last_name: '')
+    assert old_enrollment.valid?
+  end
+
+  test 'last name is required on new enrollments, create and update' do
+    e = assert_raises ActiveRecord::RecordInvalid do
+      create :pd_enrollment, last_name: ''
+    end
+    assert e.message.include? 'Validation failed: Last name is required'
+
+    enrollment = create :pd_enrollment
+    refute enrollment.update(last_name: '')
+  end
+
+  test 'full_name' do
+    enrollment = create :pd_enrollment
+    enrollment.full_name = 'SplitFirst SplitLast'
+    assert_equal 'SplitFirst', enrollment.first_name
+    assert_equal 'SplitLast', enrollment.last_name
+
+    enrollment.full_name = 'FirstOnly'
+    assert_equal 'FirstOnly', enrollment.first_name
+    assert_equal '', enrollment.last_name
+
+    enrollment.full_name = 'SplitFirst SplitSecond SplitThird'
+    assert_equal 'SplitFirst', enrollment.first_name
+    assert_equal 'SplitSecond SplitThird', enrollment.last_name
+
+    enrollment.first_name = 'SeparateFirst'
+    enrollment.last_name = 'SeparateLast'
+    assert_equal 'SeparateFirst SeparateLast', enrollment.full_name
+  end
+
+  test 'email format validation' do
+    e = assert_raises ActiveRecord::RecordInvalid do
+      create :pd_enrollment, email: 'invalid@ example.net'
+    end
+    assert_equal 'Validation failed: Email does not appear to be a valid e-mail address', e.message
+
+    assert create :pd_enrollment, email: 'valid@example.net'
+  end
+
+  test 'completed_survey?' do
+    # no survey
+    PEGASUS_DB.expects('[]').with(:forms).returns(mock(where: mock(any?: false)))
+    enrollment = create :pd_enrollment
+    refute enrollment.completed_survey?
+
+    # survey just completed, not yet processed
+    PEGASUS_DB.expects('[]').with(:forms).returns(mock(where: mock(any?: true)))
+    assert enrollment.completed_survey?
+
+    # survey processed, model up to date. Pegasus should not be contacted.
+    PEGASUS_DB.expects('[]').with(:forms).never
+    enrollment.update!(completed_survey_id: 1234)
+    assert enrollment.completed_survey?
+  end
+
+  test 'filter_for_survey_completion argument check' do
+    e = assert_raises do
+      # not an enumerable
+      Pd::Enrollment.filter_for_survey_completion('invalid type')
+    end
+    assert_equal 'Expected enrollments to be an Enumerable list of Pd::Enrollment objects', e.message
+
+    e = assert_raises do
+      # enumerable contains non-enrollments
+      Pd::Enrollment.filter_for_survey_completion([create(:pd_enrollment), 'invalid type'])
+    end
+    assert_equal 'Expected enrollments to be an Enumerable list of Pd::Enrollment objects', e.message
+
+    # valid
+    assert Pd::Enrollment.filter_for_survey_completion([create(:pd_enrollment)])
+  end
+
+  test 'filter_for_survey_completion' do
+    teachercon1 = create :pd_workshop, :teachercon, num_enrollments: 1, num_sessions: 1
+    teachercon2 = create :pd_ended_workshop, :teachercon, enrolled_and_attending_users: 1, num_sessions: 1
+    teachercon3 = create :pd_ended_workshop, :teachercon, enrolled_and_attending_users: 1, num_sessions: 1
+
+    create :pd_teachercon_survey, pd_enrollment: teachercon3.enrollments.first
+
+    enrollments = [
+      enrollment_no_survey = create(:pd_enrollment),
+      enrollment_with_unprocessed_survey = create(:pd_enrollment),
+      enrollment_with_processed_survey = create(:pd_enrollment, completed_survey_id: 1234),
+      enrollment_in_unfinished_teachercon = teachercon1.enrollments.first,
+      enrollment_in_finished_teachercon = teachercon2.enrollments.first,
+      enrollment_in_finished_teachercon_did_survey = teachercon3.enrollments.first,
+    ]
+
+    with_surveys = [enrollment_with_unprocessed_survey, enrollment_with_processed_survey, enrollment_in_finished_teachercon_did_survey]
+    without_surveys = [enrollment_no_survey, enrollment_in_unfinished_teachercon, enrollment_in_finished_teachercon]
+    PEGASUS_DB.stubs('[]').with(:forms).returns(stub(where:
+        [
+          {source_id: enrollment_with_unprocessed_survey.id.to_s},
+          {source_id: enrollment_with_processed_survey.id.to_s}
+        ]
+      )
+    )
+
+    assert_equal with_surveys, Pd::Enrollment.filter_for_survey_completion(enrollments)
+    assert_equal with_surveys, Pd::Enrollment.filter_for_survey_completion(enrollments, true)
+    assert_equal without_surveys, Pd::Enrollment.filter_for_survey_completion(enrollments, false)
+  end
+
+  test 'local summer survey filter' do
+    workshop = create :pd_workshop, :local_summer_workshop, num_sessions: 5
+    teacher = create :teacher
+    enrollment = create :pd_enrollment, :from_user, user: teacher, workshop: workshop
+
+    assert_equal [enrollment], Pd::Enrollment.filter_for_survey_completion([enrollment], false)
+
+    # complete survey
+    create :pd_workshop_daily_survey, pd_workshop: workshop, user: enrollment.user
+    assert_equal [], Pd::Enrollment.filter_for_survey_completion([enrollment], false)
+  end
+
+  test 'academic year survey filter' do
+    workshop = create :pd_workshop, course: Pd::Workshop::COURSE_CSP, subject: Pd::Workshop::SUBJECT_CSP_WORKSHOP_1, num_sessions: 1
+    teacher = create :teacher
+    enrollment = create :pd_enrollment, :from_user, user: teacher, workshop: workshop
+
+    assert_equal [enrollment], Pd::Enrollment.filter_for_survey_completion([enrollment], false)
+
+    # complete survey
+    create :pd_workshop_daily_survey, pd_workshop: workshop, user: enrollment.user, form_id: Pd::WorkshopDailySurvey.get_form_id_for_subject_and_day(workshop.subject, 'post_workshop'), day: 1
+    assert_equal [], Pd::Enrollment.filter_for_survey_completion([enrollment], false)
+  end
+
+  test 'enrolling in class automatically enrolls in online learning' do
+    Pd::Workshop::WORKSHOP_COURSE_ONLINE_LEARNING_MAPPING.each do |course, plc_course_name|
+      workshop = create :pd_workshop, course: course, subject: Pd::Workshop::SUBJECTS[course].first
+      plc_course = create :plc_course, name: plc_course_name
+      teacher = create :teacher
+      create :pd_enrollment, user: teacher, workshop: workshop
+
+      assert_equal 1, Plc::UserCourseEnrollment.where(user: teacher, plc_course: plc_course).size
+    end
+
+    workshop = create :pd_workshop, course: 'Counselor'
+    teacher = create :teacher
+    assert_no_difference('Plc::UserCourseEnrollment.count') do
+      create :pd_enrollment, user: teacher, workshop: workshop
+    end
+  end
+
+  test 'enrolling in class, and then later having the user field updated enrolls in online learning' do
+    teacher = create :teacher
+    create :plc_course, name: 'ECS Support'
+    workshop = create :pd_workshop, course: Pd::Workshop::COURSE_ECS
+    enrollment = create :pd_enrollment, user: nil, workshop: workshop
+
+    assert_creates Plc::UserCourseEnrollment do
+      enrollment.update(user: teacher)
+    end
+    assert_equal 'ECS Support', Plc::UserCourseEnrollment.find_by(user: teacher).plc_course.name
+  end
+
+  test 'enrolling in class while not logged in still associates the user' do
+    teacher = create :teacher
+    create :plc_course, name: 'ECS Support'
+    workshop = create :pd_workshop, course: Pd::Workshop::COURSE_ECS
+
+    assert_creates Plc::UserCourseEnrollment do
+      create :pd_enrollment, user: nil, workshop: workshop, email: teacher.email
+    end
+
+    assert_equal 'ECS Support', Plc::UserCourseEnrollment.find_by(user: teacher).plc_course.name
+  end
+
+  test 'enrolling in class without an account creates enrollment when the user is created' do
+    create :plc_course, name: 'ECS Support'
+    workshop = create :pd_workshop, course: Pd::Workshop::COURSE_ECS
+    user_email = "#{SecureRandom.hex}@code.org"
+    create :pd_enrollment, user: nil, email: user_email, workshop: workshop
+
+    teacher = assert_creates Plc::UserCourseEnrollment do
+      create(:teacher, email: user_email)
+    end
+
+    assert_equal 'ECS Support', Plc::UserCourseEnrollment.find_by(user: teacher).plc_course.name
+  end
+
+  test 'attendance scopes' do
+    workshop = create :pd_workshop, num_sessions: 2
+    teacher = create :teacher
+    enrollment_not_attended = create :pd_enrollment
+    enrollment_attended = create :pd_enrollment, workshop: workshop
+    workshop.sessions.each do |session|
+      create :pd_attendance, session: session, teacher: teacher, enrollment: enrollment_attended
+    end
+
+    assert_equal [enrollment_attended], Pd::Enrollment.attended
+    assert_equal [enrollment_not_attended], Pd::Enrollment.not_attended
+    assert_empty Pd::Enrollment.attended.not_attended
+  end
+
+  test 'ended workshop scope' do
+    # not ended
+    create :pd_enrollment
+    enrollment_ended = create :pd_enrollment, workshop: create(:pd_ended_workshop)
+
+    assert_equal [enrollment_ended], Pd::Enrollment.for_ended_workshops
+  end
+
+  test 'with_surveys scope' do
+    ended_workshop = create :pd_ended_workshop, num_sessions: 1
+    expected_enrollment = create :pd_enrollment, workshop: ended_workshop
+    create :pd_attendance, session: ended_workshop.sessions.first, enrollment: expected_enrollment
+
+    # Non-ended workshop, no attendance
+    non_ended_workshop = create :pd_workshop, num_sessions: 1
+    create :pd_enrollment, workshop: non_ended_workshop
+
+    # Non-ended workshop, with attendance
+    create :pd_enrollment, workshop: non_ended_workshop
+    create :pd_attendance, session: non_ended_workshop.sessions.first
+
+    # Ended workshop, no attendance
+    create :pd_enrollment, workshop: ended_workshop
+
+    assert_equal [expected_enrollment], Pd::Enrollment.with_surveys
+  end
+
+  test 'name fields are auto-stripped' do
+    enrollment = build :pd_enrollment, first_name: ' First  ', last_name: '  Last '
+    enrollment.validate
+    assert_equal 'First', enrollment.first_name
+    assert_equal 'Last', enrollment.last_name
+  end
+
+  test 'get safe names' do
+    enrollments = create_list :pd_enrollment, 5
+    safe_names = Pd::Enrollment.where(id: enrollments.pluck(:id)).order(:id).get_safe_names
+    assert_equal 5, safe_names.length
+
+    # each safe name is a tuple of the full name and the enrollment itself
+    expected = enrollments.map {|e| [e.full_name, e]}
+    assert_equal expected, safe_names
+  end
+
+  test 'school is deprecated' do
+    enrollment = build :pd_enrollment, school: 'a school'
+    returned_school = assert_deprecated 'School is deprecated. Use school_info or school_name instead.' do
+      enrollment.school
+    end
+    assert_equal 'a school', returned_school
+  end
+
+  test 'school_name calls school_info.effective_school_name' do
+    enrollment = build :pd_enrollment
+    enrollment.school_info.expects(:effective_school_name).returns('effective school name')
+    assert_equal 'effective school name', enrollment.school_name
+  end
+
+  test 'school_name falls back to school if no school info' do
+    enrollment = build :pd_enrollment, school_info: nil, school: 'old format school'
+    assert_equal 'old format school', enrollment.school_name
+  end
+
+  test 'school_district calls school_info.effective_school_district_name' do
+    enrollment = build :pd_enrollment
+    enrollment.school_info.expects(:effective_school_district_name).returns('effective school district name')
+    assert_equal 'effective school district name', enrollment.school_district_name
+  end
+
+  test 'school is forbidden' do
+    enrollment = build :pd_enrollment, school: 'a school'
+    refute enrollment.valid?
+    assert_equal ['School is forbidden'], enrollment.errors.full_messages
+  end
+
+  test 'old enrollments with school are grandfathered in' do
+    old_enrollment = build :pd_enrollment, school: 'a school'
+    old_enrollment.save(validate: false)
+    assert old_enrollment.valid?
+
+    # but they can't be changed
+    old_enrollment.school = 'another school'
+    refute old_enrollment.valid?
+  end
+
+  test 'school info country required on create' do
+    enrollment = build :pd_enrollment, school_info: create(:school_info_without_country)
+    refute enrollment.valid?
+    assert enrollment.errors.full_messages.include? 'School info must have a country'
+  end
+
+  test 'old enrollments with no school info country are grandfathered in' do
+    old_enrollment = build :pd_enrollment, school_info: create(:school_info_without_country)
+    old_enrollment.save(validate: false)
+    assert old_enrollment.valid?
+  end
+
+  test 'enrollment is deleted after clear_data for deleted owner' do
+    enrollment = create :pd_enrollment, :from_user
+    enrollment.user.destroy!
+
+    enrollment.clear_data
+    enrollment.reload
+
+    assert enrollment.deleted?
+  end
+
+  test 'enrollment is valid after clear_data for deleted owner' do
+    enrollment = create :pd_enrollment, :from_user
+    enrollment.user.destroy!
+
+    enrollment.clear_data
+
+    assert_nil enrollment.read_attribute :name
+    assert_equal '', enrollment.name
+    assert_nil enrollment.first_name
+    assert_nil enrollment.last_name
+    assert_equal '', enrollment.email
+    assert_nil enrollment.user_id
+    assert_nil enrollment.school
+    assert_nil enrollment.school_info_id
+    assert enrollment.reload.valid?, enrollment.errors.messages
+  end
+
+  test 'Enrolling user in CSD course makes them an authorized teacher' do
+    teacher = create :teacher
+    assert_empty teacher.permissions
+
+    workshop = create :pd_workshop, course: Pd::SharedWorkshopConstants::COURSE_CSD
+    create :pd_enrollment, workshop: workshop, user: teacher
+
+    assert teacher.permission? UserPermission::AUTHORIZED_TEACHER
+  end
+
+  test 'Enrolling user in CSF course does not make them authorized teacher' do
+    teacher = create :teacher
+    assert_empty teacher.permissions
+
+    workshop = create :pd_workshop, course: Pd::SharedWorkshopConstants::COURSE_CSF
+    create :pd_enrollment, workshop: workshop, user: teacher
+
+    refute teacher.permission? UserPermission::AUTHORIZED_TEACHER
+  end
+
+  test 'Updating existing enrollment sets permission' do
+    workshop = create :pd_workshop, course: Pd::SharedWorkshopConstants::COURSE_CSD, num_sessions: 1
+    enrollment = create :pd_enrollment, workshop: workshop, user: nil
+
+    teacher = create :teacher
+
+    refute teacher.permission? UserPermission::AUTHORIZED_TEACHER
+
+    enrollment.update(user: teacher)
+
+    assert teacher.permission? UserPermission::AUTHORIZED_TEACHER
+  end
+end
