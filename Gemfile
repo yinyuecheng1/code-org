@@ -248,7 +248,7 @@ gem 'aws-sdk-s3', '~> 1'
 gem 'aws-sdk-sqs', '~> 1'
 
 # Lint tools
-group :development, :staging do
+group :development, :production, :staging do
   gem 'haml_lint', require: false
   gem 'rubocop', '~> 0.52', require: false
   gem 'scss_lint', require: false
