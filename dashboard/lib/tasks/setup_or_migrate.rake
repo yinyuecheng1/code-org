@@ -2,12 +2,7 @@ require 'active_record/errors'
 
 namespace :db do
   def database_exists?
-    Rake::Task['environment'].invoke
-    ActiveRecord::Base.connection
-  rescue ActiveRecord::NoDatabaseError
     false
-  else
-    true
   end
 
   task :setup_or_migrate do

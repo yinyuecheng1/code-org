@@ -3,9 +3,9 @@
 Devise.setup do |config|
   config.secret_key = CDO.dashboard_devise_secret
 
-  unless Rails.env.production?
+  #unless Rails.env.production?
     config.secret_key ||= "not a secure secret key!"
-  end
+  #end
 
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,

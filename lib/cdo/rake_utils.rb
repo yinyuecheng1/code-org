@@ -310,7 +310,8 @@ module RakeUtils
   # Whether this is a local or adhoc environment where we should install npm and create
   # a local database.
   def self.local_environment?
-    (rack_env?(:development, :test) && !CDO.chef_managed) || rack_env?(:adhoc)
+	true
+    #(rack_env?(:development, :test) && !CDO.chef_managed) || rack_env?(:adhoc)
   end
 
   def self.wait_for_url(url)

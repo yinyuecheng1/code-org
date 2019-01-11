@@ -69,7 +69,7 @@ end
 # Rack::Cache::Response used by Rack::Optimize in non-development environments.
 gem 'rack-cache'
 
-group :development, :test do
+group :development, :production, :test do
   gem 'rerun'
 
   # Ref: https://github.com/e2/ruby_dep/issues/24
